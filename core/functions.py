@@ -87,10 +87,13 @@ def delete(hostname, sid):
     print "[+] Session %s killed !"%hostname
 
 def list_modules():
-	modules = os.listdir("modules")
-	for module in modules:
-		oct_commands_interact.append(module)
-		print module
+	if os.path.isdir("modules"):
+		modules = os.listdir("modules")
+		for module in modules:
+			oct_commands_interact.append(module)
+			print module
+	else:
+		print colored("[-] modules directory not Available")
 
 def persistence():
     # to do
