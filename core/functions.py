@@ -107,7 +107,7 @@ def load_module(session, module_name):
 	if os.path.isfile(module):
 		fi = open(module, "r")
 		module_content = fi.read()
-		base64_command = base64.b64encode(module_content)
+		base64_command = encrypt_command(key, base64.b64encode(module_content))
 		commands[session] = base64_command
 		print colored("[+] Module should be loaded !", "green")
 	else:
