@@ -177,8 +177,8 @@ while True:
             host = command.split(" ")[3]
             interval = command.split(" ")[4]
             path = command.split(" ")[5]
+            listener_name = command.split(" ")[6]
             if check_listener_name(listener_name):
-                listener_name = command.split(" ")[6]
                 key_path = command.split(" ")[7]
                 cert_path = command.split(" ")[8]
                 if not os.path.isfile(cert_path) or not os.path.isfile(key_path):
