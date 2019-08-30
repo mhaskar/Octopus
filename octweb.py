@@ -9,7 +9,6 @@ import os
 import signal
 from termcolor import colored
 from core.functions import *
-from core.generation import *
 from core.weblistener import *
 from flask import *
 import logging
@@ -200,7 +199,7 @@ while True:
                     listener.start_listener()
                     listener.create_path()
             else:
-                print colored("[-] URL name already used, please change it", "red")  
+                print colored("[-] URL name already used, please change it", "red")
 
         except IndexError:
             print colored("[-] Please check listener arguments !", "red")
