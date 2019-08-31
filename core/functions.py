@@ -52,7 +52,6 @@ def get_history():
     print f.read()
 
 def list_listeners():
-   	    print listeners_information.keys()
 	    data = []
 	    for key in listeners_information:
 	        data.append(listeners_information[key])
