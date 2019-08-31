@@ -145,7 +145,6 @@ while True:
             interval = command.split(" ")[4]
             path = command.split(" ")[5]
             listener_name = command.split(" ")[6]
-            print check_listener_name(listener_name)
             if check_listener_name(listener_name):
                 if check_url(path):
                     listener = NewListener(
@@ -157,7 +156,6 @@ while True:
                         path
                         )
                     listener.start_listener()
-                    print "[+] creating path for %s"%listener
                     listener.create_path()
                 else:
                     print colored("[-] URL name already used, please change it", "red")
