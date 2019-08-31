@@ -125,10 +125,12 @@ while True:
                     list_modules()
                     pass
                 elif scommand.split(" ")[0] == "load":
-                    module_name = scommand.split(" ")[1]
-                    load_module(session[2], module_name)
-                    # call load function
-                    pass
+                    try:
+                        module_name = scommand.split(" ")[1]
+                        load_module(session[2], module_name)
+                        pass
+                    except IndexError:
+                        print colored("[+] Please select a module !")
                 elif scommand == "disable_amsi":
                     disable_amsi(session[2])
                     pass
@@ -143,7 +145,6 @@ while True:
             interval = command.split(" ")[4]
             path = command.split(" ")[5]
             listener_name = command.split(" ")[6]
-            print check_listener_name(listener_name)
             if check_listener_name(listener_name):
                 if check_url(path):
                     listener = NewListener(
@@ -155,7 +156,6 @@ while True:
                         path
                         )
                     listener.start_listener()
-                    print "[+] creating path for %s"%listener
                     listener.create_path()
                 else:
                     print colored("[-] URL name already used, please change it", "red")

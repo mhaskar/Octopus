@@ -24,7 +24,6 @@ log.disabled = True
 class NewListener:
 
   def __init__(self,*args):
-    print args
     arguments = len(args)
     self.arguments = arguments
     if len(args) == 6:
@@ -47,7 +46,6 @@ class NewListener:
 
 
   def start_listener(self):
-    print self.arguments
     host = [self.bindip, self.bindport]
 
     if self.arguments == 6:
@@ -74,7 +72,6 @@ class NewListener:
 #    if request.headers["User-Agent"] != "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36":
 #        return "Hello World !"
 #    else:
-        print self.host
         f = open("agents/agent.ps1")
         if self.ssl == True:
             proto = "https"
