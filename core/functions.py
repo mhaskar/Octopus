@@ -56,7 +56,7 @@ def list_listeners():
 	    for key in listeners_information:
 	        data.append(listeners_information[key])
             # listener_name, ip, port, host, interval, path, listener_name
-	    print "\n\n" + tabulate(data, ["Name", "IP", "Port", "Host", "Interval", "Path", "SSL", "AES_KEY"], "simple") + "\n\n"
+	    print "\n\n" + tabulate(data, ["Name", "IP", "Port", "Host", "Interval", "Path", "SSL"], "simple") + "\n\n"
 
 
 def completer(text, state):

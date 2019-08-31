@@ -65,8 +65,7 @@ class NewListener:
         thread = threading.Thread(target=app.run, args=(host), kwargs=cert)
         thread.daemon = True
         thread.start()
-    listeners_information[self.name] = [self.name, self.bindip, self.bindport, self.host, self.interval, self.path, self.ssl, aes_encryption_key]
-
+    listeners_information[self.name] = [self.name, self.bindip, self.bindport, self.host, self.interval, self.path, self.ssl]
   def powershell_code(self):
       #return self.host
 #    if request.headers["User-Agent"] != "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36":
