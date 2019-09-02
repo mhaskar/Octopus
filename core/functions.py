@@ -74,7 +74,7 @@ def completer_interact(text, state):
         return None
 
 def send_command(session, command):
-	encrypted_command = base64.b64encode(encrypt_command(aes_encryption_key, command))
+	encrypted_command = encrypt_command(aes_encryption_key, command)
         commands[session] = encrypted_command
     	print "[+] Command sent , waiting for results"
 
@@ -107,7 +107,7 @@ def load_module(session, module_name):
 		fi = open(module, "r")
 		module_content = fi.read()
 		# encrypt module before send it
-		base64_command = base64.b64encode(encrypt_command(aes_encryption_key, module_content))
+		base64_command = encrypt_command(aes_encryption_key, module_content)
 		commands[session] = base64_command
 		print colored("[+] Module should be loaded !", "green")
 	else:
@@ -154,7 +154,29 @@ def main_help_banner():
     print "exit \t\t\t\texit current session"
     print "\n"
 
+def http_help_banner():
+    print "\n##########"
+    print "Options info : \n"
+    print "BindIP  \t\tIP address that will be used by the listener"
+    print "BindPort  \t\tport you want to listen on"
+    print "Hostname \t\twill be used to request the payload from"
+    print "Interval \t\thow may seconds that agent will wait before check for commands"
+    print "URL  \t\t\tpage name will hold the payload"
+    print "Listener_name  \t\tlistener name to use\n"
 
+# certficate_path key_path
+def https_help_banner():
+    print "\n##########"
+    print "Options info : \n"
+    print "BindIP  \t\tIP that will be used by the listener"
+    print "BindPort  \t\tport you want to listen on"
+    print "Hostname \t\twill be used to request the payload from"
+    print "Interval \t\thow may seconds that agent will wait before check for commands"
+    print "URL  \t\t\tpage name will hold the payload"
+    print "certficate_path \t the full path for the ssl certficate"
+    print "key_path \t\t the full path for the ssl certficate private key\n"
+
+    print "Listener_name  \t\tlistener name to use"
 def interact_help():
 	print "\n"
 	print "Available commands to use :\n"

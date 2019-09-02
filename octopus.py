@@ -21,14 +21,17 @@ def ctrlc(sig, frame):
     pass
 
 signal.signal(signal.SIGINT, ctrlc)
-
+if not os.path.isfile(".oct_history"):
+    open('.oct_history', 'a').close()
+else:
+    readline.read_history_file(".oct_history")
 
 banner()
 
 while True:
     readline.set_completer(completer)
     readline.parse_and_bind("tab: complete")
-
+    readline.write_history_file(".oct_history")
     command = raw_input("\033[4mOctopus\033[0m"+colored(" >>", "green"))
     # readline.write_history_file(".console_history.oct")
     if command == "list":
@@ -77,7 +80,7 @@ while True:
             continue
 
         try:
-            hostname = listeners_information[listener][3]
+            hostname = listeners_information[listener][3]+":"+listeners_information[listener][2]
             interval = listeners_information[listener][4]
             path = listeners_information[listener][5]
             proto = listeners_information[listener][6]
@@ -164,9 +167,11 @@ while True:
 
         except IndexError:
             print colored("[-] Please check listener arguments !", "red")
-            print colored("Syntax  : listen_http BindIP BindPort hostname interval URI listener_name", "green")
-            print colored("Example : listen_http 172.0.1.3 443 myc2.live:443 5 /images/a.png askar (with domain)", "yellow")
-            print colored("Example : listen_http 172.0.1.3 8001 172.0.1.3:8001 5 profile.php askar (without domain)", "yellow")
+            print colored("Syntax  : listen_http BindIP BindPort hostname interval URL listener_name", "green")
+            print colored("Example (with domain) : listen_http 0.0.0.0 8080 myc2.live 5 comments.php op1_listener", "yellow")
+            print colored("Example (without domain) : listen_http 0.0.0.0 8080 172.0.1.3 5 profile.php op1_listener", "yellow")
+            http_help_banner()
+
             continue
 
     elif command.split(" ")[0] == "listen_https":
@@ -203,6 +208,6 @@ while True:
 
         except IndexError:
             print colored("[-] Please check listener arguments !", "red")
-            print colored("Syntax  : listen_https BindIP BindPort hostname interval URI listener_name certficate_path key_path", "green")
-            print colored("Example (with domain) : listen_https 0.0.0.0 443 myc2.live:443 5 login.php listener1 certs/cert.pem certs/key.pem", "yellow")
+            print colored("Syntax  : listen_https BindIP BindPort hostname interval URL listener_name certficate_path key_path", "green")
+            print colored("Example (with domain) : listen_https 0.0.0.0 443 myc2.live 5 login.php op1_listener certs/cert.pem certs/key.pem", "yellow")
             continue

