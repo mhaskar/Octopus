@@ -94,7 +94,7 @@ You can generate listeners as much as you want then you can start interacting wi
 
 Octopus has two main listeners "http listener" and "https listener" , and the options of the two listeners are nearly the same.
 
-*** HTTP listener : **
+**HTTP listener :**
 
 `listen_http` command takes the following arguments to start:
 
@@ -161,7 +161,40 @@ Octopus >>
 
 ```
 
-*** HTTPS listener : **
+**HTTPS listener :**
+
+To create a HTTPS listener you can use `listen_https` command like the following:
+
+```
+Octopus >>listen_https
+[-] Please check listener arguments !
+Syntax  : listen_https BindIP BindPort hostname interval URL listener_name certficate_path key_path
+Example (with domain) : listen_https 0.0.0.0 443 myc2.live 5 login.php op1_listener certs/cert.pem certs/key.pem
+Octopus >>listen_https 0.0.0.0 443 myc2.live 5 login.php darkside_operation certs/cert.pem certs/key.pem
+SSL listener started !
+[+]darkside_operation Listener has been created
+Octopus >> * Serving Flask app "core.weblistener" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+
+Octopus >>
+```
+
+`listen_https` command takes the following arguments to start:
+
+  - BindIP   : which is the IP address that will be used by the listener
+  - BindPort : which is the port you want to listen on
+  - Hostname : will be used to request the payload from
+  - Interval : how may seconds that agent will wait before check for commands
+  - URL page : name will hold the payload
+  - Listener_name : listener name to use
+  - certficate_path : path for valid ssl certficate (called fullchain.pem for letsencrypt certficates)
+  - key_path        : path for valid key for the ssl cerficate (called key.pem for letsencrypt certficates)
+
+Please note that you need to provide a valid SSL certficate that is associated with the used domain `myc2.live` in our case.
+
 
 ### Generate agents
 
@@ -309,11 +342,19 @@ SIEM solution : False
 # Screenshots
 
 ![Octopus main screen](screenshots/1.png)
+* * * *
 ![Octopus Help](screenshots/2.png)
+* * * *
 ![Octopus Listeners](screenshots/3.png)
+* * * *
 ![Octopus over ssl](screenshots/4.png)
+* * * *
 ![Octopus load module](screenshots/5.png)
+* * * *
 ![Octopus ESA](screenshots/6.png)
+* * * *
 ![Octopus ESA2](screenshots/7.png)
+* * * *
 ![Octopus agents](screenshots/8.png)
+* * * *
 ![Octopus generate powershell](screenshots/9.png)
