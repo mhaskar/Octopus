@@ -116,9 +116,6 @@ while True:
                     kill(session[2])
                 elif scommand == "clear":
                     os.system("clear")
-                elif scommand == "report":
-                    # call report function
-                    pass
 
                 elif scommand == "upload":
                     # call upload function
@@ -160,10 +157,12 @@ while True:
                         )
                     listener.start_listener()
                     listener.create_path()
+                    print colored("[+]%s Listener has been created" % listener_name, "green")
                 else:
                     print colored("[-] URL name already used, please change it", "red")
             else:
                 print colored("[-] Listener name already used, please change it", "red")
+
 
         except IndexError:
             print colored("[-] Please check listener arguments !", "red")
@@ -203,6 +202,7 @@ while True:
                     )
                     listener.start_listener()
                     listener.create_path()
+                    print colored("[+]%s Listener has been created" % listener_name, "green")
             else:
                 print colored("[-] URL name already used, please change it", "red")
 
