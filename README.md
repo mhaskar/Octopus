@@ -314,6 +314,6 @@ SIEM solution : False
 ![Octopus over ssl](screenshots/4.png)
 ![Octopus load module](screenshots/5.png)
 ![Octopus ESA](screenshots/6.png)
-![Octopus ESA](screenshots/7.png)
+![Octopus ESA2](screenshots/7.png)
 ![Octopus agents](screenshots/8.png)
 ![Octopus generate powershell](screenshots/9.png)
