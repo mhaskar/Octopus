@@ -80,7 +80,6 @@ To get the following results :
 
 
 Octopus >>
-
 ```
 # Usage
 
@@ -125,7 +124,6 @@ URL  			page name will hold the payload
 Listener_name  	listener name to use
 
 Octopus >>
-
 ```
 
 And we can start a listener using the following command :
@@ -143,7 +141,6 @@ Octopus >> * Serving Flask app "core.weblistener" (lazy loading)
  * Debug mode: off
 
 Octopus >>
-
 ```
 
 a listener started successfully, and we can view all the listeners using `listeners` command to get:
@@ -224,7 +221,6 @@ Octopus >>list
 
 
 Octopus >>
-
 ```
 
 And then we can use `interact` command to interact with the host like the following:
@@ -240,7 +236,6 @@ Octopus >>list
 
 Octopus >>interact 1
 (HR-PC-TYRMJ) >>
-
 ```
 
 And you can list all the available commands to use using `help` command like the following:
@@ -274,7 +269,6 @@ report 				get situation report from the target
 
 
 (HR-PC-TYRMJ) >>
-
 ```
 
 and to execute a system command directly we can type the command directly and then wait for the results based on the interval check time that we set when we created the listener.
@@ -338,6 +332,17 @@ SIEM solution : False
 (HR-PC-TYRMJ) >>
 ```
 
+You can also load an external powershell module by executing `load module.ps1` and you have to put all of your modules inside `modules` directory.
+
+Also you can see all your modules in modules directory by executing `modules` command like the following:
+
+```
+(HR-PC-TYRMJ) >> modules
+PowerView.ps1
+(HR-PC-TYRMJ) >> load PowerView.ps1
+[+] Module should be loaded !
+(HR-PC-TYRMJ) >>
+```
 
 # Screenshots
 
