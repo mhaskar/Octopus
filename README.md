@@ -88,6 +88,64 @@ Usage of Octopus is really simple, you just need to start a listener and generat
 You can generate listeners as much as you want then you can start interacting with your agents.
 
 
+### Profile setup
+
+Before you can start Octopus you have to setup a URL handling profile which will control the C2 behaviors and fuctions, because Octopus is a HTTP based C2 it depends on URLs to handling the connections and to guarantee that the URLs will not be a signatures or IoC in the network you can easily customize them and add name them as you wish.
+
+> Profile setup are supporting URLs handling only, but with the next few updates you will be able to control all other options such as headers, html templates , etc ..
+
+**Setup your profile**
+
+To start setup your profile you need to edit `profile.py` file , which contains a key variables which are:
+
+  - file_reciver_url : handle files downloading
+  - report_url : handle ESA report
+  - command_send_url : handle the commands will be sent to the target
+  - command_receiver_url : handle commands will be executed from the target
+  - first_ping_url : handle the first connection from the target
+
+I will change the default profile to be the following:
+
+```
+#!/usr/bin/python2.7
+
+# this is the web listener profile for Octopus C2
+# you can customize your profile to handle a specific URLs to communicate with the agent
+# TODO : add the ability to customize the request headers
+
+# handling the file downloading
+# Ex : /anything
+# Ex : /anththing.php
+file_reciver_url = "/messages"
+
+
+# handling the report generation
+# Ex : /anything
+# Ex : /anththing.php
+report_url = "/calls"
+
+# command sending to agent (store the command will be executed on a host)
+# leave <hostname> as it with the same format
+# Ex : /profile/<hostname>
+# Ex : /messages/<hostname>
+# Ex : /bills/<hostname>
+command_send_url = "/view/<hostname>"
+
+
+# handling the executed command
+# Ex : /anything
+# Ex : /anththing.php
+command_receiver_url = "/bills"
+
+
+# handling the first connection from the agent
+# Ex : /anything
+# Ex : /anththing.php
+first_ping_url = "/login"
+
+```
+
+The agent and the listeners will be configured to use this profile to communicate with each other, now we need to know how to create a listener.
 
 ### Listeners
 
@@ -155,7 +213,6 @@ operation1  0.0.0.0    8080  192.168.178.1           5  page.php  False
 
 
 Octopus >>
-
 ```
 
 **HTTPS listener :**
