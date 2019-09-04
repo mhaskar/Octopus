@@ -343,6 +343,13 @@ PowerView.ps1
 [+] Module should be loaded !
 (HR-PC-TYRMJ) >>
 ```
+# Todo
+* [ ] Create collaborative team server
+* [ ] Add extra information to gather for ESA module
+* [ ] Add generate HTA payload
+* [ ] Add generate compiled binary
+* [ ] Add auto process injection feature
+* [ ] Add customized profile for listeners
 
 # Screenshots
 
