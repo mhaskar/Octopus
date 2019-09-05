@@ -171,6 +171,13 @@ def cr():
         #    return "A"
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    response = make_response('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"> <title>404 Not Found</title> <h1>Not Found</h1> <p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>')
+    response.headers["Server"] = server_response_header
+    return response
+
+
 @app.route(first_ping_url)
 def first_ping():
     	    global counter
