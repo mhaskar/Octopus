@@ -7,29 +7,32 @@
 # handling the file downloading
 # Ex : /anything
 # Ex : /anththing.php
-file_reciver_url = "/file_receiver"
+file_reciver_url = "/messages"
 
 
 # handling the report generation
 # Ex : /anything
 # Ex : /anththing.php
-report_url = "/report"
+report_url = "/calls"
 
 # command sending to agent (store the command will be executed on a host)
 # leave <hostname> as it with the same format
 # Ex : /profile/<hostname>
 # Ex : /messages/<hostname>
 # Ex : /bills/<hostname>
-command_send_url = "/command/<hostname>"
+command_send_url = "/view/<hostname>"
 
 
 # handling the executed command
 # Ex : /anything
 # Ex : /anththing.php
-command_receiver_url = "/command_receiver"
+command_receiver_url = "/bills"
 
 
 # handling the first connection from the agent
 # Ex : /anything
 # Ex : /anththing.php
-first_ping_url = "/first_ping"
+first_ping_url = "/login"
+
+# will return in every response as Server header
+server_response_header = "nginx"
