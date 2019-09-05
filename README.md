@@ -103,6 +103,8 @@ To start setup your profile you need to edit `profile.py` file , which contains 
   - command_send_url : handle the commands will be sent to the target
   - command_receiver_url : handle commands will be executed from the target
   - first_ping_url : handle the first connection from the target
+  - server_response_header : this header will show in every response
+
 
 I will change the default profile to be the following:
 
@@ -142,6 +144,10 @@ command_receiver_url = "/bills"
 # Ex : /anything
 # Ex : /anththing.php
 first_ping_url = "/login"
+
+# will return in every response as Server header
+server_response_header = "nginx"
+
 
 ```
 
