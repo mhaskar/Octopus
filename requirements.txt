@@ -1,0 +1,4 @@
+termcolor
+tabulate
+pycrypto
+flask
