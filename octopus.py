@@ -11,11 +11,7 @@ from termcolor import colored
 from core.functions import *
 from core.weblistener import *
 from flask import *
-import profile
 import logging
-
-
-
 
 
 def ctrlc(sig, frame):
@@ -85,16 +81,44 @@ while True:
             interval = listeners_information[listener][4]
             path = listeners_information[listener][5]
             proto = listeners_information[listener][6]
+
+            # check if protocol is True then https is used
             if proto:
                 proto_to_use = "https"
-
-            elif proto == False:
+            else:
                 proto_to_use = "http"
 
             generate(hostname, path, proto_to_use, interval)
         except KeyError:
             print colored("[-] Wrong listener selected !", "red")
             continue
+
+    if command.split(" ")[0] == "generate_exe":
+        try:
+            listener = command.split(" ")[1]
+            exe_path = command.split(" ")[2]
+        except IndexError:
+            print colored("[-] Please select a listener and check your options !", "red")
+            print colored("Syntax :  generate_exe listener_name output_path", "green")
+            print colored("Example : generate_exe listener1 /opt/Octopus/file.exe", "yellow")
+            continue
+
+        try:
+            hostname = listeners_information[listener][3]+":"+listeners_information[listener][2]
+            path = listeners_information[listener][5]
+            proto = listeners_information[listener][6]
+
+            # check if protocol is True then https is used
+            if proto:
+                proto_to_use = "https"
+            else:
+                proto_to_use = "http"
+
+            generate_exe(hostname, path, proto_to_use, exe_path)
+        except KeyError:
+            print colored("[-] Wrong listener selected !", "red")
+            continue
+
 
     if command.split(" ")[0] == "interact":
             readline.set_completer(completer_interact)
@@ -163,7 +187,6 @@ while True:
                     print colored("[-] URL name already used, please change it", "red")
             else:
                 print colored("[-] Listener name already used, please change it", "red")
-
 
         except IndexError:
             print colored("[-] Please check listener arguments !", "red")

