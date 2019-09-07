@@ -85,7 +85,7 @@ class NewListener:
         pcode3 = pcode2.replace("OCT_first_ping", first_ping_url.split("/")[1])
         pcode4 = pcode3.replace("OCT_command", command_host_url)
         pcode5 = pcode4.replace("OCT_report", report_url.split("/")[1])
-        pcode6 = pcode5.replace("OCT_file_receiver", file_reciver_url.split("/")[1])
+        pcode6 = pcode5.replace("OCT_file_receiver", file_receiver_url.split("/")[1])
         pcode7 = pcode6.replace("OCTRECV", command_receiver_url.split("/")[1])
         pcode8 = pcode7.replace("OCU_PROTO", proto)
         pcode9 = pcode8.replace("SRVHOST", srvhost)

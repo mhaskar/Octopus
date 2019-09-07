@@ -7,7 +7,7 @@
 # handling the file downloading
 # Ex : /anything
 # Ex : /anththing.php
-file_reciver_url = "/messages"
+file_receiver_url = "/messages"
 
 
 # handling the report generation
