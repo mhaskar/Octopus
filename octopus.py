@@ -165,9 +165,17 @@ while True:
         try:
             # create new listeners for
             ip = command.split(" ")[1]
-            port = command.split(" ")[2]
+            try:
+                port = command.split(" ")[2]
+            except ValueError:
+                print colored("[-] port should be number !", "red")
+                continue
             host = command.split(" ")[3]
-            interval = command.split(" ")[4]
+            try:
+                interval = int(command.split(" ")[4])
+            except ValueError:
+                print colored("[-] interval should be number !", "red")
+                continue
             path = command.split(" ")[5]
             listener_name = command.split(" ")[6]
             if check_listener_name(listener_name):
@@ -201,9 +209,17 @@ while True:
         try:
             # create new listeners for
             ip = command.split(" ")[1]
-            port = command.split(" ")[2]
+            try:
+                port = command.split(" ")[2]
+            except ValueError:
+                print colored("[-] port should be number !", "red")
+                continue
             host = command.split(" ")[3]
-            interval = command.split(" ")[4]
+            try:
+                interval = int(command.split(" ")[4])
+            except ValueError:
+                print colored("[-] interval should be number !", "red")
+                continue
             path = command.split(" ")[5]
             listener_name = command.split(" ")[6]
             if check_listener_name(listener_name):
