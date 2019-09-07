@@ -77,7 +77,7 @@ while True:
             continue
 
         try:
-            hostname = listeners_information[listener][3]+":"+listeners_information[listener][2]
+            hostname = listeners_information[listener][3]+":"+str(listeners_information[listener][2])
             interval = listeners_information[listener][4]
             path = listeners_information[listener][5]
             proto = listeners_information[listener][6]
@@ -104,7 +104,7 @@ while True:
             continue
 
         try:
-            hostname = listeners_information[listener][3]+":"+listeners_information[listener][2]
+            hostname = listeners_information[listener][3]+":"+str(listeners_information[listener][2])
             path = listeners_information[listener][5]
             proto = listeners_information[listener][6]
 
