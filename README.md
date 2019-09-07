@@ -98,7 +98,7 @@ Before you can start Octopus you have to setup a URL handling profile which will
 
 To start setup your profile you need to edit `profile.py` file , which contains a key variables which are:
 
-  - file_reciver_url : handle files downloading
+  - file_receiver_url : handle files downloading
   - report_url : handle ESA report
   - command_send_url : handle the commands will be sent to the target
   - command_receiver_url : handle commands will be executed from the target
