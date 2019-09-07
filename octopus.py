@@ -166,7 +166,7 @@ while True:
             # create new listeners for
             ip = command.split(" ")[1]
             try:
-                port = command.split(" ")[2]
+                port = int(command.split(" ")[2])
             except ValueError:
                 print colored("[-] port should be number !", "red")
                 continue
@@ -210,7 +210,7 @@ while True:
             # create new listeners for
             ip = command.split(" ")[1]
             try:
-                port = command.split(" ")[2]
+                port = int(command.split(" ")[2])
             except ValueError:
                 print colored("[-] port should be number !", "red")
                 continue
