@@ -284,7 +284,7 @@ Now we can use this oneliner to start our agent.
 
 To generate an EXE agent for listener `operation1` we can use the following command:
 
-`generate_exe operation1`
+`generate_exe operation1 /opt/Octopus/file.exe`
 
 and we will get the following results:
 
