@@ -1,4 +1,0 @@
-termcolor
-tabulate
-pycrypto
-flask
