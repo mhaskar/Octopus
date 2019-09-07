@@ -144,7 +144,7 @@ def generate_exe(hostname, path, proto, output_path):
 		compile_command = "mono-csc /reference:includes/System.Management.Automation.dll tmp.cs /out:%s" % output_path
 		if os.system(compile_command) == 0:
 			print colored("[+] file compiled successfully !", "green")
-			print colored("[+] binary file saved to {0}".format(output_path), "green")
+			print colored("[+] binary file saved to {0}".format(output_path), "red")
 			os.system("rm tmp.cs")
 		else:
 			print "[-] error while compiling !"

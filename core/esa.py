@@ -30,6 +30,12 @@ SIEM = {
     "":"",
 }
 
+others = {
+
+    "Sysmon":"Sysmon.exe"
+
+}
+
 def esa(processes, session):
     for process in processes:
         for key in AV_list.keys():

