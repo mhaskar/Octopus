@@ -80,7 +80,7 @@ class NewListener:
         srvhost = self.host + ":" + str(self.bindport)
         command_host_url = command_send_url.split("/")[1]
         pcode = f.read()
-        pcode1 = pcode.replace("OCU_INTERVAL", self.interval)
+        pcode1 = pcode.replace("OCU_INTERVAL", str(self.interval))
         pcode2 = pcode1.replace("OCT_KEY", aes_encryption_key)
         pcode3 = pcode2.replace("OCT_first_ping", first_ping_url.split("/")[1])
         pcode4 = pcode3.replace("OCT_command", command_host_url)
