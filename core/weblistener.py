@@ -105,7 +105,7 @@ def index():
     return resp
 
 
-@app.route(file_reciver_url, methods=["POST"])
+@app.route(file_receiver_url, methods=["POST"])
 def fr():
     filename = decrypt_command(aes_encryption_key, request.form["fn"].replace(" ","+"))
     f = open(filename, "wb")
