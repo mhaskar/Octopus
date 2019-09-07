@@ -188,14 +188,13 @@ Example (without domain) : listen_http 0.0.0.0 8080 172.0.1.3 5 profile.php op1_
 ##########
 Options info :
 
-BindIP  		  : IP address that will be used by the listener
-BindPort  	  :	port you want to listen on
-Hostname 		  : will be used to request the payload from
-Interval 		  : how may seconds that agent will wait before check for commands
-URL  			    : page name will hold the payload
-Listener_name :  	listener name to use
+BindIP  		IP address that will be used by the listener
+BindPort  		port you want to listen on
+Hostname 		will be used to request the payload from
+Interval 		how may seconds that agent will wait before check for commands
+URL  			page name will hold the payload
+Listener_name  		listener name to use
 
-Octopus >>
 ```
 
 And we can start a listener using the following command :
