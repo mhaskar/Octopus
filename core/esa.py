@@ -17,7 +17,7 @@ AV_list = {
     "SentinelOne": ["SentinelAgent", "SentinelOne"],
     "Sophos": ["sophosssp", "sophossps"],
     "TrendMicro": ["tmntsrv"],
-    "Windows Defender": ["MsMpEng.exe"],
+    "Windows Defender": ["MsMpEng"],
     "ZoneALarm": ["zlclient"],
     "Panda AntiVirus": ["AVENGINE"],
     "AVG": ["avgemc"],
