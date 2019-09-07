@@ -24,7 +24,7 @@
   * Generate different types of payloads.
   * **Gather information automatically from the endpoint (endpoint situational awareness) feature.**
 
-# requirements
+# Requirements
 
 You can install all Octopus requirements via :
 
@@ -118,7 +118,7 @@ I will change the default profile to be the following:
 # handling the file downloading
 # Ex : /anything
 # Ex : /anththing.php
-file_reciver_url = "/messages"
+file_receiver_url = "/messages"
 
 
 # handling the report generation
