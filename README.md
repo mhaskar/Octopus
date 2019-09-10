@@ -1,32 +1,36 @@
-# What is Octopus ? ![](https://img.shields.io/badge/python-2.7-blue) ![](https://img.shields.io/badge/beta-version-yellow)
+# What is Octopus ? ![](https://img.shields.io/badge/python-2.7-blue)
 
-  Octopus is an open source pre-operation C2 server based on python which can control an Octopus powershell agent through HTTP/S.
+  Octopus is an open source, pre-operation C2 server based on python which can control an Octopus powershell agent through HTTP/S.
 
-  The main perpose of creating Octopus is to use it before any red team operation, Insted of start the engagement with your operation infrastrcture, you can use Octopus first to attack the target and gather some inforamtion before you start your attack because Octopus works in very simple way to execute command and exchange it with the C2 in a well encrypted channel which makes it unsuspicious and undetectable from almost every AV and endpoint and network protection.
+  The main purpose of creating Octopus is for use before any red team operation, where rather than starting the engagement with your full operational arsenal and infrastructure, you can use Octopus first to attack the target and gather information before you start your actual red team operation.
 
-  There is a cool feature in Octopus called ESA "Endpoint Situational Awareness" which will gather some important information from the target endpoint that will help you to understand the target network endpoints that you will face during your operation, which will give you a shot to customize your real operation based on this informations.
+  Octopus works in a very simple way to execute commands and exchange information with the C2 over a well encrypted channel, which makes it inconspicuous and undetectable from almost every AV, endpoint protection, and network monitoring solution.
 
-  Octopus designed to be stealthy and covert while communicating with the C2 because it use AES-256 as a default encryption channel between the powershell agent and the C2 server, and also you can use Octopus through TLS/SSL too by providing a valid certficate for your domain and start Octopus C2 server using it.
+  One cool feature in Octopus is called ESA, which stands for "Endpoint Situational Awareness", which will gather some important information about the target that will help you to gain better understanding of the target network endpoints that you will face during your operation, thus giving you a shot to customize your real operation based on this information.
+
+  Octopus is designed to be stealthy and covert while communicating with the C2, as it uses AES-256 by default for its encrypted channel between the powershell agent and the C2 server. You can also opt for using SSL/TLS by providing a valid certficate for your domain and configuring the Octopus C2 server to use it.
 
 
 
   # Octopus key features
-  Octopus let you as a attacker to execute system commands and do some other stuff that you may need before you start your real engagement such as :
+  Octopus is packed with a number of features that allows you to gain an insight into your upcoming engagement before you actually need to deploy your full aresenal or tools and techniques, such as:
 
 
   * Control agents throught HTTP/S.
   * Execute system commands.
   * Download / Upload files.
   * Load external powershell modules.
-  * Use encrypted channels (AES 256) between C2 and agents.
-  * Use unsuspicious techniuqes to execute commands and transfer results.
+  * Use encrypted channels (AES-256) between C2 and agents.
+  * Use inconspicuous techniques to execute commands and transfer results.
   * Create custom and multiple listeners for each target.
   * Generate different types of payloads.
+  * Support all windows version with powershell 2.0 and higher.
+  * Run Octopus windows executable agent without touching powershell.exe process.
   * **Gather information automatically from the endpoint (endpoint situational awareness) feature.**
 
 # Requirements
 
-You can install all Octopus requirements via :
+You can install all of Octopus' requirements via :
 
 ```pip install -r requirements.txt```
 
@@ -34,17 +38,17 @@ Octopus has been tested on the following operating systems:
 
 * Ubuntu (18.04)
 * Ubuntu (16.04)
-* Kali Linux (2019.2) (No need to install requirements.txt)
+* Kali Linux (2019.2)
 
-Also you need to install mono to make sure that you can compile the C# source without problem.
+You will also need to install mono to make sure that you can compile the C# source without issues.
 
 Octopus depends on mono-csc binary to compile the C# source and you can install it by the following command `apt install mono-devel` which has been tested on kali and ubuntu 16.04.
 
-> if you want to use Octopus without installing mono of course you can do that but you will not be able to use `generate_exe` command.
+> you can use Octopus without installing mono but you will not be able to use `generate_exe` command.
 
-Also please not that C# compling process depends on `System.Management.Automation.dll` Assembly with SHA1 hash a43ed886b68c6ee913da85df9ad2064f1d81c470
+Also please note that compling C# depends on the `System.Management.Automation.dll` assembly with SHA1 hash a43ed886b68c6ee913da85df9ad2064f1d81c470.
 
-If you have any troubles using Octopus, feel free to open an [issue](https://github.com/mhaskar/Octopus/issues) !
+If you encounter any issues using Octopus, feel free to file a [bug report](https://github.com/mhaskar/Octopus/issues)!
 
 # Installation
 First of all make sure to download the latest version of Octopus using the following command :
@@ -55,14 +59,14 @@ Then you need to install the requirements using the following command :
 
 `pip install -r requirements.txt`
 
-After that you can start octopus server like the following :
+After that you can start the octopus server by running the following :
 
 `./octopus.py`
 
-To get the following results :
+You will by greeted with the following once you run it :
 
 ```
-┌─[askar@arrow]─[/opt/Octopus]
+┌─[root@kali]─[/opt/Octopus]
 └──╼ $./octopus.py
 
 
@@ -91,47 +95,47 @@ Octopus >>
 ```
 # Usage
 
-Usage of Octopus is really simple, you just need to start a listener and generate your agent based on that listener information.
+Using Octopus is quite simple to use, as you just need to start a listener and generate your agent based on that listener's information.
 
-You can generate listeners as much as you want then you can start interacting with your agents.
+You can generate as many listeners as you need, and then you can start interacting with your agents that connect to them.
 
 
 ### Profile setup
 
-Before you can start Octopus you have to setup a URL handling profile which will control the C2 behaviors and fuctions, because Octopus is a HTTP based C2 it depends on URLs to handling the connections and to guarantee that the URLs will not be a signatures or IoC in the network you can easily customize them and add name them as you wish.
+Before you can start using Octopus you have to setup a URL handling profile which will control the C2 behavior and functions, as Octopus is an HTTP based C2 thus it depends on URLs to handle the connections and to guarantee that the URLs will not serve as a signatures or IoC in the network you are currently attacking, the URLs can be easily customized and renamed as needed.
 
-> Profile setup are supporting URLs handling only, but with the next few updates you will be able to control all other options such as headers, html templates , etc ..
+> Profile setup currently only support URL handling, but with the next few updates you will be able to control additional options such as headers,html templates ,etc...
 
-**Setup your profile**
+**Setting up your profile**
 
-To start setup your profile you need to edit `profile.py` file , which contains a key variables which are:
+To start setting up your profile you need to edit the `profile.py` file , which contains a number of key variables, which are:
 
-  - file_receiver_url : handle files downloading
-  - report_url : handle ESA report
-  - command_send_url : handle the commands will be sent to the target
-  - command_receiver_url : handle commands will be executed from the target
-  - first_ping_url : handle the first connection from the target
-  - server_response_header : this header will show in every response
+  - file_reciever_url : handles file downloading.
+  - report_url : handle ESA reports.
+  - command_send_url : handles the commands that will be sent to the target.
+  - command_receiver_url : handles commands will be executed on the target.
+  - first_ping_url : handles the first connection from the target.
+  - server_response_header : this header will show in every response.
 
 
-I will change the default profile to be the following:
+Example:
 
 ```
 #!/usr/bin/python2.7
 
 # this is the web listener profile for Octopus C2
-# you can customize your profile to handle a specific URLs to communicate with the agent
+# you can customize your profile to handle a specific URL to communicate with the agent
 # TODO : add the ability to customize the request headers
 
 # handling the file downloading
 # Ex : /anything
 # Ex : /anththing.php
-file_receiver_url = "/messages"
+file_reciever_url = "/messages"
 
 
 # handling the report generation
 # Ex : /anything
-# Ex : /anththing.php
+# Ex : /anything.php
 report_url = "/calls"
 
 # command sending to agent (store the command will be executed on a host)
@@ -159,24 +163,24 @@ server_response_header = "nginx"
 
 ```
 
-The agent and the listeners will be configured to use this profile to communicate with each other, now we need to know how to create a listener.
+The agent and the listeners will be configured to use this profile to communicate with each other. Next we need to know how to create a listener.
 
 ### Listeners
 
-Octopus has two main listeners "http listener" and "https listener" , and the options of the two listeners are nearly the same.
+Octopus has two main listeners,"http listener" and "https listener" , and the options of the two listeners are mostly identical.
 
 **HTTP listener :**
 
 `listen_http` command takes the following arguments to start:
 
-- BindIP  		which is the IP address that will be used by the listener
-- BindPort  	which is the port you want to listen on
-- Hostname 		will be used to request the payload from
-- Interval 		how may seconds that agent will wait before check for commands
-- URL  			page name will hold the payload
-- Listener_name  	listener name to use
+- BindIP  		    Defines the IP address that will be used by the listener.
+- BindPort      	Defines the port you want to listen on.
+- Hostname 		    Will be used to request the payload from.
+- Interval 	    	How number of seconds the agent will wait before checking for commands.
+- URL  			    The name of the page hosting the payload.
+- Listener_name  	Listener name to use.
 
-and also you can view an examples of it if you executed `listen_http` command like the following:
+ you can also view an example of it by running the `listen_http` command:
 
 ```
 Octopus >>listen_http
@@ -193,15 +197,16 @@ BindPort  		port you want to listen on
 Hostname 		will be used to request the payload from
 Interval 		how may seconds that agent will wait before check for commands
 URL  			page name will hold the payload
-Listener_name  		listener name to use
+Listener_name  	listener name to use
 
+Octopus >>
 ```
 
 And we can start a listener using the following command :
 
 `listen_http 0.0.0.0 8080 192.168.178.1 5 page.php operation1`
 
-We will get the following result:
+The following result will be returned:
 
 ```
 Octopus >>listen_http 0.0.0.0 8080 192.168.178.1 5 page.php operation1
@@ -214,7 +219,7 @@ Octopus >> * Serving Flask app "core.weblistener" (lazy loading)
 Octopus >>
 ```
 
-a listener started successfully, and we can view all the listeners using `listeners` command to get:
+a listener has been started successfully, and we can view all the listeners using the `listeners` command:
 
 ```
 Octopus >>listeners
@@ -230,7 +235,7 @@ Octopus >>
 
 **HTTPS listener :**
 
-To create a HTTPS listener you can use `listen_https` command like the following:
+To create an HTTPS listener you can use `listen_https` command as such:
 
 ```
 Octopus >>listen_https
@@ -249,7 +254,7 @@ Octopus >> * Serving Flask app "core.weblistener" (lazy loading)
 Octopus >>
 ```
 
-`listen_https` command takes the following arguments to start:
+The `listen_https` command takes the following arguments to start:
 
   - BindIP   : which is the IP address that will be used by the listener
   - BindPort : which is the port you want to listen on
@@ -260,7 +265,7 @@ Octopus >>
   - certficate_path : path for valid ssl certficate (called fullchain.pem for letsencrypt certficates)
   - key_path        : path for valid key for the ssl cerficate (called key.pem for letsencrypt certficates)
 
-Please note that you need to provide a valid SSL certficate that is associated with the used domain `myc2.live` in our case.
+Please note that you need to provide a valid SSL certficate that is associated with the domain used.
 
 
 ### Generate agents
@@ -271,7 +276,7 @@ To generate an agent for the listener `operation1` we can use the following comm
 
 `generate_powershell operation1`
 
-and we will get the following results:
+and we will get the following result:
 ```
 Octopus >>generate_powershell operation1
 
@@ -284,9 +289,9 @@ Now we can use this oneliner to start our agent.
 
 To generate an EXE agent for listener `operation1` we can use the following command:
 
-`generate_exe operation1 /opt/Octopus/file.exe`
+`generate_exe operation1`
 
-and we will get the following results:
+and we will get the following result:
 
 ```
 Octopus >>generate_exe darkside_operation2 /opt/Octopus/file.exe
@@ -299,7 +304,7 @@ Octopus >>
 
 ### Interacting with agents
 
-first of all you can list all the connected agents using `list` command to get the following results:
+First of all you can list all connected agents using the `list` command to get the following results:
 ```
 Octopus >>list
 
@@ -312,7 +317,7 @@ Octopus >>list
 Octopus >>
 ```
 
-And then we can use `interact` command to interact with the host like the following:
+And then we can use the `interact` command to interact with the host as follows:
 
 ```
 Octopus >>list
@@ -327,7 +332,7 @@ Octopus >>interact 1
 (HR-PC-TYRMJ) >>
 ```
 
-And you can list all the available commands to use using `help` command like the following:
+You can list all the available commands using the `help` command like the following:
 
 ```
 Octopus >>list
@@ -360,7 +365,7 @@ report 				get situation report from the target
 (HR-PC-TYRMJ) >>
 ```
 
-and to execute a system command directly we can type the command directly and then wait for the results based on the interval check time that we set when we created the listener.
+To execute a system command directly we can type the command directly and then wait for the results based on the interval check time that we set when we created the listener.
 
 ```
 (HR-PC-TYRMJ) >> ipconfig
@@ -399,31 +404,40 @@ Ethernet adapter Bluetooth Network Connection:
 (HR-PC-TYRMJ) >>
 ```
 
-In this case the command has been encrypted and then sent to the agent, after that the client will decrypt the command and execute it, then the agent will encrypt the results and send it back again to the C2 to decrypt it and show the results.
+In this case the command has been encrypted and then sent to the agent, after that the client will decrypt the command and execute it, the agent will encrypt the results, and finally send it back again to the C2 to decrypt it and show the results.
 
-Also we can use `report` command to get the ESA information like the following:
+We can also use the `report` command to get the ESA information like the following:
 
 ```
 (HR-PC-TYRMJ) >> report
 [+] Command sent , waiting for results
 (HR-PC-TYRMJ) >>
-Endpoint situation awareness report for HR-PC-TYRMJ
+Endpoint situation awareness report for HR-PC-QNGAV
 
 =============
-Hostname : 	HR-PC-TYRMJ
+Hostname : 	HR-PC-QNGAV
 Domain : 	darkside.com
 OS : 		Microsoft Windows 10 Pro(64-bit)
 OS build : 	10.0.17134
 OS arch : 	64-bit
-AntiVirus : Symantec
+AntiVirus : 	Symantec
 SIEM solution : False
+Internal interfaces/IPs :
+	IP : 192.168.178.144
+	IP : 172.12.1.20
+
+
+Device language : en-US
+Device uptime : 41.6386169797778 hours
+Device local time : 21:55(09/09/2019)
+
 
 (HR-PC-TYRMJ) >>
 ```
 
-You can also load an external powershell module by executing `load module.ps1` and you have to put all of your modules inside `modules` directory.
+You can load an external powershell module by placing it in the `modules` directory, then executing `load module.ps1`.
 
-Also you can see all your modules in modules directory by executing `modules` command like the following:
+Also you can list all of the modules in the modules directory by executing the `modules` command like so:
 
 ```
 (HR-PC-TYRMJ) >> modules
@@ -435,10 +449,10 @@ PowerView.ps1
 # Todo
 * [ ] Create collaborative team server
 * [ ] Add extra information to gather for ESA module
-* [ ] Add generate HTA payload
-* [x] Add generate compiled binary
+* [ ] Add the capability to generate HTA payloads
+* [x] Add generation of compiled binaries
 * [ ] Add auto process injection feature
-* [x] Add customized profile for listeners
+* [x] Add customized profiles for listeners
 
 # Screenshots
 
@@ -459,3 +473,7 @@ PowerView.ps1
 ![Octopus agents](screenshots/8.png)
 * * * *
 ![Octopus generate powershell](screenshots/9.png)
+
+# License
+
+This project is licensed under the GPL-3.0 License - see the LICENSE file for details
