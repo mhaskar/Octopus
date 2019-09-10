@@ -6,13 +6,13 @@
 
 # handling the file downloading
 # Ex : /anything
-# Ex : /anththing.php
+# Ex : /anything.php
 file_receiver_url = "/messages"
 
 
 # handling the report generation
 # Ex : /anything
-# Ex : /anththing.php
+# Ex : /anything.php
 report_url = "/calls"
 
 # command sending to agent (store the command will be executed on a host)
@@ -25,13 +25,13 @@ command_send_url = "/view/<hostname>"
 
 # handling the executed command
 # Ex : /anything
-# Ex : /anththing.php
+# Ex : /anything.php
 command_receiver_url = "/bills"
 
 
 # handling the first connection from the agent
 # Ex : /anything
-# Ex : /anththing.php
+# Ex : /anything.php
 first_ping_url = "/login"
 
 # will return in every response as Server header
