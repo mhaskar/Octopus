@@ -161,7 +161,7 @@ def main_help_banner():
     print "list  \t\t\t\tlist all connected agents"
     print "listeners \t\t\tlist all listeners"
     print "* generate_powershell \t\tgenerate powershell oneliner"
-    print "* generate_exe \t\tgenerate executable agent"
+    print "* generate_exe \t\t\tgenerate executable agent"
     print "* listen_http  \t\t\tto start a HTTP listener"
     print "* listen_https  \t\tto start a HTTPS listener"
     print "interact {session}  \t\tto interact with a session"
