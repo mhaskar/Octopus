@@ -24,7 +24,7 @@
   * Use inconspicuous techniques to execute commands and transfer results.
   * Create custom and multiple listeners for each target.
   * Generate different types of payloads.
-  * Support all windows version with powershell 2.0 and higher.
+  * Support all windows versions with powershell 2.0 and higher.
   * Run Octopus windows executable agent without touching powershell.exe process.
   * **Gather information automatically from the endpoint (endpoint situational awareness) feature.**
 
