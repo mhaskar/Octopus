@@ -36,3 +36,6 @@ first_ping_url = "/login"
 
 # will return in every response as Server header
 server_response_header = "nginx"
+
+#will return white page that includes HTA script
+mshta_url="/hta"

