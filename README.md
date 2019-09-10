@@ -451,7 +451,6 @@ PowerView.ps1
 * [ ] Add extra information to gather for ESA module
 * [ ] Add the capability to generate HTA payloads
 * [x] Add generation of compiled binaries
-* [ ] Add auto process injection feature
 * [x] Add customized profiles for listeners
 
 # Screenshots
