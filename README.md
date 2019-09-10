@@ -449,7 +449,7 @@ PowerView.ps1
 # Todo
 * [ ] Create collaborative team server
 * [ ] Add extra information to gather for ESA module
-* [ ] Add the capability to generate HTA payloads
+* [ ] Add generation of HTA payloads
 * [x] Add generation of compiled binaries
 * [x] Add customized profiles for listeners
 
