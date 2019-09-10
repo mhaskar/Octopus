@@ -67,14 +67,14 @@ def esa(processes, session):
     print "OS arch : \t%s" % arch[0]
     print "AntiVirus : \t%s" % anti_virus
     print "SIEM solution : %s" % siem
-    #print "Mail Applications : "
+    # print "Mail Applications : "
     print "Internal interfaces/IPs :"
     for ip in internal_ips:
         print "\tIP : %s" % ip
     print "\n"
-    #print "SMBshares : "
-    #print "Device connected to internet : "
-    #print "Powershell logging enabled  : "
+    # print "SMBshares : "
+    # print "Device connected to internet : "
+    # print "Powershell logging enabled  : "
     print "Device language : %s" % language
     print "Device uptime : %s hours" % uptime
     print "Device local time : %s" % systime
