@@ -4,7 +4,7 @@ from termcolor import colored
 import tabulate
 from functions import listeners_information
 avs = []
-siem_found = False
+
 
 AV_list = {
     "Kaspersky":    ["avp", "avpui", "klif", "KAVFS", "kavfsslp"],
@@ -35,6 +35,7 @@ SIEM = {
 
 def esa(processes, session):
     sysmon = False
+    siem_found = False
     # check for AVs
     for process in processes:
         for key in AV_list.keys():
