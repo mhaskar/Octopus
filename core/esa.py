@@ -4,6 +4,8 @@ from termcolor import colored
 import tabulate
 from functions import listeners_information
 avs = []
+siem_found = False
+sysmon = False
 AV_list = {
     "Kaspersky":    ["avp", "avpui", "klif", "KAVFS", "kavfsslp"],
     "Symantec":    ["SmcGui", "SISIPSService"],
@@ -27,22 +29,28 @@ AV_list = {
 }
 SIEM = {
 
-    "":"",
+    "winlogbeat":"winlogbeat"
 }
 
-others = {
-
-    "Sysmon":"Sysmon"
-
-}
 
 def esa(processes, session):
+    # check for AVs
     for process in processes:
         for key in AV_list.keys():
             for av_process in AV_list[key]:
                 if process == av_process:
                     avs.append(key)
 
+    # check for SIEM collector
+    for process in processes:
+        for siem in SIEM:
+            if process == siem:
+                siem_found = process
+
+    # check for sysmon
+    for process in processes:
+        if process == "Sysmon":
+            sysmon = True
 
     hostname = session[2]
     os_version = session[7]
@@ -51,7 +59,7 @@ def esa(processes, session):
         domain = "Not domain-joined device !"
     arch = session[7].split("(")[1].split(")")
     anti_virus = ",".join(i for i in set(avs))
-    siem = False
+    siem = siem_found
     systime = processes[-1]
     uptime = processes[-2]
     language = processes[-3]
@@ -66,7 +74,8 @@ def esa(processes, session):
     print "OS build : \t%s" % os_build
     print "OS arch : \t%s" % arch[0]
     print "AntiVirus : \t%s" % anti_virus
-    print "SIEM solution : %s" % siem
+    print "SIEM collector : %s" % siem
+    print "SysMon Enabled : %s" % sysmon
     # print "Mail Applications : "
     print "Internal interfaces/IPs :"
     for ip in internal_ips:
