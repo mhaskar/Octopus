@@ -218,7 +218,6 @@ def fr():
 def report():
     encrypted_host = request.headers["App-Logic"]
     hostname = decrypt_command(aes_encryption_key, encrypted_host).strip("\x00")
-    print hostname in connections_information[2][2]
     for key in connections_information.keys():
         if hostname in connections_information[key][2]:
             session = connections_information[key]
