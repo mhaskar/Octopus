@@ -5,7 +5,7 @@ import tabulate
 from functions import listeners_information
 avs = []
 siem_found = False
-sysmon = False
+
 AV_list = {
     "Kaspersky":    ["avp", "avpui", "klif", "KAVFS", "kavfsslp"],
     "Symantec":    ["SmcGui", "SISIPSService"],
@@ -34,6 +34,7 @@ SIEM = {
 
 
 def esa(processes, session):
+    sysmon = False
     # check for AVs
     for process in processes:
         for key in AV_list.keys():
@@ -49,7 +50,7 @@ def esa(processes, session):
 
     # check for sysmon
     for process in processes:
-        if process == "Sysmon":
+        if process == "Sysmon64":
             sysmon = True
 
     hostname = session[2]
