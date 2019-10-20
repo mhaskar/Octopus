@@ -1,4 +1,4 @@
-# What is Octopus ? ![](https://img.shields.io/badge/python-2.7-blue)
+# What is Octopus ? ![](https://img.shields.io/badge/python-3-yellow)
 
   Octopus is an open source, pre-operation C2 server based on python which can control an Octopus powershell agent through HTTP/S.
 
