@@ -2,7 +2,7 @@
 
 from termcolor import colored
 import tabulate
-from functions import listeners_information
+from .functions import listeners_information
 avs = []
 
 
@@ -38,7 +38,7 @@ def esa(processes, session):
     siem_found = False
     # check for AVs
     for process in processes:
-        for key in AV_list.keys():
+        for key in list(AV_list.keys()):
             for av_process in AV_list[key]:
                 if process == av_process:
                     avs.append(key)
@@ -68,25 +68,25 @@ def esa(processes, session):
     os_build = processes[-4]
     internal_ips = processes[-5].split(";")
 
-    print colored('\nEndpoint situation awareness report for %s' % hostname, "yellow")
-    print colored("\n=============")
-    print "Hostname : \t%s" % hostname
-    print "Domain : \t%s" % domain
-    print "OS : \t\t%s" % os_version
-    print "OS build : \t%s" % os_build
-    print "OS arch : \t%s" % arch[0]
-    print "AntiVirus : \t%s" % anti_virus
-    print "SIEM collector : %s" % siem
-    print "SysMon Enabled : %s" % sysmon
+    print(colored('\nEndpoint situation awareness report for %s' % hostname, "yellow"))
+    print(colored("\n============="))
+    print("Hostname : \t%s" % hostname)
+    print("Domain : \t%s" % domain)
+    print("OS : \t\t%s" % os_version)
+    print("OS build : \t%s" % os_build)
+    print("OS arch : \t%s" % arch[0])
+    print("AntiVirus : \t%s" % anti_virus)
+    print("SIEM collector : %s" % siem)
+    print("SysMon Enabled : %s" % sysmon)
     # print "Mail Applications : "
-    print "Internal interfaces/IPs :"
+    print("Internal interfaces/IPs :")
     for ip in internal_ips:
-        print "\tIP : %s" % ip
-    print "\n"
+        print("\tIP : %s" % ip)
+    print("\n")
     # print "SMBshares : "
     # print "Device connected to internet : "
     # print "Powershell logging enabled  : "
-    print "Device language : %s" % language
-    print "Device uptime : %s hours" % uptime
-    print "Device local time : %s" % systime
+    print("Device language : %s" % language)
+    print("Device uptime : %s hours" % uptime)
+    print("Device local time : %s" % systime)
     #print "Installed APPs : "

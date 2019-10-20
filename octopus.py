@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python
 
 import threading
 import readline
@@ -30,7 +30,7 @@ while True:
     readline.set_completer(completer)
     readline.parse_and_bind("tab: complete")
     readline.write_history_file(".oct_history")
-    command = raw_input("\033[4mOctopus\033[0m"+colored(" >>", "green"))
+    command = input("\033[4mOctopus\033[0m"+colored(" >>", "green"))
     # readline.write_history_file(".console_history.oct")
     if command == "list":
         list_sessions()
@@ -50,7 +50,7 @@ while True:
             session = connections_information[int(command.split(" ")[1])]
             delete(session[2], int(command.split(" ")[1]))
         except (KeyError, ValueError):
-            print colored("[-] Wrong listener selected !", "red")
+            print(colored("[-] Wrong listener selected !", "red"))
             continue
 
     # delete_listener
@@ -70,9 +70,9 @@ while True:
         try:
             listener = command.split(" ")[1]
         except IndexError:
-            print colored("[-] Please select a listener !", "red")
-            print colored("Syntax :  generate_powershell listener_name", "green")
-            print colored("Example : generate_powershell listener1", "yellow")
+            print(colored("[-] Please select a listener !", "red"))
+            print(colored("Syntax :  generate_powershell listener_name", "green"))
+            print(colored("Example : generate_powershell listener1", "yellow"))
             continue
 
         try:
@@ -89,16 +89,16 @@ while True:
 
             generate(hostname, path, proto_to_use, interval)
         except KeyError:
-            print colored("[-] Wrong listener selected !", "red")
+            print(colored("[-] Wrong listener selected !", "red"))
             continue
 
     if command.split(" ")[0] == "generate_hta":
         try:
             listener = command.split(" ")[1]
         except IndexError:
-            print colored("[-] Please select a listener !", "red")
-            print colored("Syntax :  generate_hta listener_name", "green")
-            print colored("Example : generate_hta listener1", "yellow")
+            print(colored("[-] Please select a listener !", "red"))
+            print(colored("Syntax :  generate_hta listener_name", "green"))
+            print(colored("Example : generate_hta listener1", "yellow"))
             continue
 
         try:
@@ -115,7 +115,7 @@ while True:
             listeners.create_hta()
             generate_hta(host_ip,bind_port,proto_to_use)
         except KeyError:
-            print colored("[-] Wrong listener selected !", "red")
+            print(colored("[-] Wrong listener selected !", "red"))
             continue
 
     if command.split(" ")[0] == "generate_exe":
@@ -123,9 +123,9 @@ while True:
             listener = command.split(" ")[1]
             exe_path = command.split(" ")[2]
         except IndexError:
-            print colored("[-] Please select a listener and check your options !", "red")
-            print colored("Syntax :  generate_exe listener_name output_path", "green")
-            print colored("Example : generate_exe listener1 /opt/Octopus/file.exe", "yellow")
+            print(colored("[-] Please select a listener and check your options !", "red"))
+            print(colored("Syntax :  generate_exe listener_name output_path", "green"))
+            print(colored("Example : generate_exe listener1 /opt/Octopus/file.exe", "yellow"))
             continue
 
         try:
@@ -141,7 +141,7 @@ while True:
 
             generate_exe(hostname, path, proto_to_use, exe_path)
         except KeyError:
-            print colored("[-] Wrong listener selected !", "red")
+            print(colored("[-] Wrong listener selected !", "red"))
             continue
 
 
@@ -152,10 +152,10 @@ while True:
             try:
                 session = connections_information[int(command.split(" ")[1])]
             except:
-                print colored("[-] Error interacting with host", "red")
+                print(colored("[-] Error interacting with host", "red"))
                 continue
             while True:
-                scommand = raw_input("(%s) >> " % colored(session[2], "red"))
+                scommand = input("(%s) >> " % colored(session[2], "red"))
                 if scommand == "":
                     continue
                 elif scommand == "exit" or scommand == "back":
@@ -180,7 +180,7 @@ while True:
                         load_module(session[2], module_name)
                         pass
                     except IndexError:
-                        print colored("[+] Please select a module !")
+                        print(colored("[+] Please select a module !"))
                 elif scommand == "disable_amsi":
                     disable_amsi(session[2])
                     pass
@@ -193,13 +193,13 @@ while True:
             try:
                 port = int(command.split(" ")[2])
             except ValueError:
-                print colored("[-] port should be number !", "red")
+                print(colored("[-] port should be number !", "red"))
                 continue
             host = command.split(" ")[3]
             try:
                 interval = int(command.split(" ")[4])
             except ValueError:
-                print colored("[-] interval should be number !", "red")
+                print(colored("[-] interval should be number !", "red"))
                 continue
             path = command.split(" ")[5]
             listener_name = command.split(" ")[6]
@@ -215,19 +215,19 @@ while True:
                         )
                     listener.start_listener()
                     listener.create_path()
-                    #in order to make it global so we can use in other functions 
+                    #in order to make it global so we can use in other functions
                     listeners=listener
-                    print colored("[+]%s Listener has been created" % listener_name, "green")
+                    print(colored("[+]%s Listener has been created" % listener_name, "green"))
                 else:
-                    print colored("[-] URL name already used, please change it", "red")
+                    print(colored("[-] URL name already used, please change it", "red"))
             else:
-                print colored("[-] Listener name already used, please change it", "red")
+                print(colored("[-] Listener name already used, please change it", "red"))
 
         except IndexError:
-            print colored("[-] Please check listener arguments !", "red")
-            print colored("Syntax  : listen_http BindIP BindPort hostname interval URL listener_name", "green")
-            print colored("Example (with domain) : listen_http 0.0.0.0 8080 myc2.live 5 comments.php op1_listener", "yellow")
-            print colored("Example (without domain) : listen_http 0.0.0.0 8080 172.0.1.3 5 profile.php op1_listener", "yellow")
+            print(colored("[-] Please check listener arguments !", "red"))
+            print(colored("Syntax  : listen_http BindIP BindPort hostname interval URL listener_name", "green"))
+            print(colored("Example (with domain) : listen_http 0.0.0.0 8080 myc2.live 5 comments.php op1_listener", "yellow"))
+            print(colored("Example (without domain) : listen_http 0.0.0.0 8080 172.0.1.3 5 profile.php op1_listener", "yellow"))
             http_help_banner()
 
             continue
@@ -239,13 +239,13 @@ while True:
             try:
                 port = int(command.split(" ")[2])
             except ValueError:
-                print colored("[-] port should be number !", "red")
+                print(colored("[-] port should be number !", "red"))
                 continue
             host = command.split(" ")[3]
             try:
                 interval = int(command.split(" ")[4])
             except ValueError:
-                print colored("[-] interval should be number !", "red")
+                print(colored("[-] interval should be number !", "red"))
                 continue
             path = command.split(" ")[5]
             listener_name = command.split(" ")[6]
@@ -253,9 +253,9 @@ while True:
                 key_path = command.split(" ")[7]
                 cert_path = command.split(" ")[8]
                 if not os.path.isfile(cert_path) or not os.path.isfile(key_path):
-                    print colored("[-] Please check the certficate and key path", "red")
-                elif listener_name in listeners_information.keys():
-                    print colored("[-] Listener name already used, please change it", "red")
+                    print(colored("[-] Please check the certficate and key path", "red"))
+                elif listener_name in list(listeners_information.keys()):
+                    print(colored("[-] Listener name already used, please change it", "red"))
                 else:
                     listener = NewListener(
                         listener_name,
@@ -269,12 +269,12 @@ while True:
                     )
                     listener.start_listener()
                     listener.create_path()
-                    print colored("[+]%s Listener has been created" % listener_name, "green")
+                    print(colored("[+]%s Listener has been created" % listener_name, "green"))
             else:
-                print colored("[-] URL name already used, please change it", "red")
+                print(colored("[-] URL name already used, please change it", "red"))
 
         except IndexError:
-            print colored("[-] Please check listener arguments !", "red")
-            print colored("Syntax  : listen_https BindIP BindPort hostname interval URL listener_name certficate_path key_path", "green")
-            print colored("Example (with domain) : listen_https 0.0.0.0 443 myc2.live 5 login.php op1_listener certs/cert.pem certs/key.pem", "yellow")
+            print(colored("[-] Please check listener arguments !", "red"))
+            print(colored("Syntax  : listen_https BindIP BindPort hostname interval URL listener_name certficate_path key_path", "green"))
+            print(colored("Example (with domain) : listen_https 0.0.0.0 443 myc2.live 5 login.php op1_listener certs/cert.pem certs/key.pem", "yellow"))
             continue

