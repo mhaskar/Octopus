@@ -162,8 +162,6 @@ while True:
                     break
                 elif scommand == "help":
                     interact_help()
-                elif scommand == "kill":
-                    kill(session[2])
                 elif scommand == "clear":
                     os.system("clear")
 
