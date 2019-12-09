@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 
 # this is the web listener profile for Octopus C2
 # you can customize your profile to handle a specific URLs to communicate with the agent
