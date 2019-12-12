@@ -165,10 +165,6 @@ while True:
                 elif scommand == "clear":
                     os.system("clear")
 
-                elif scommand == "upload":
-                    # call upload function
-                    pass
-
                 elif scommand == "modules":
                     list_modules()
                     pass
