@@ -14,6 +14,14 @@ from flask import *
 from profile import *
 import logging
 
+python_version = sys.version_info[0]
+
+if python_version != 3:
+    print(colored("[-] Unable to run Octopus", "red"))
+    print(colored("[-] Please run Octopus with python 3", "red"))
+    sys.exit()
+
+
 listeners=NewListener()
 def ctrlc(sig, frame):
     pass
