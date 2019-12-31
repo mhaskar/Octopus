@@ -20,8 +20,11 @@ def encrypt_command(key, plain):
     decoded_key = base64.b64decode(key)
     aesobj = AES.new(decoded_key, AES.MODE_CBC, iv)
     data = pad(plain)
-    encd = aesobj.encrypt(data)
-    return base64.b64encode(iv + encd)
+    try:
+        encd = aesobj.encrypt(data)
+        return base64.b64encode(iv + encd)
+    except:
+        return ""
 
 def decrypt_command(key, encrypted_text):
     decoded_key = base64.b64decode(key)
