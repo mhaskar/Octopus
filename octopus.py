@@ -246,26 +246,34 @@ while True:
                     continue
                 path = command.split(" ")[5]
                 listener_name = command.split(" ")[6]
-                if check_listener_name(listener_name):
-                    if check_url(path):
-                        listener = NewListener(
-                            listener_name,
-                            ip,
-                            port,
-                            host,
-                            interval,
-                            path
-                            )
-                        listener.start_listener()
-                        listener.create_path()
-                        #in order to make it global so we can use in other functions
-                        listeners=listener
-                        print(colored("[+]%s Listener has been created" % listener_name, "green"))
-                    else:
-                        print(colored("[-] URL name already used, please change it", "red"))
-                else:
-                    print(colored("[-] Listener name already used, please change it", "red"))
+                if check_create_path(host):
+                    if check_listener_name(listener_name):
+                        if check_url(path):
+                            listener = NewListener(
+                                listener_name,
+                                ip,
+                                port,
+                                host,
+                                interval,
+                                path
+                                )
+                            if check_listener_port(ip, port):
+                                listener.start_listener()
+                                listener.create_path()
+                                listeners=listener
+                                print(colored("[+]%s Listener has been created" % listener_name, "green"))
+                            #else:
+                            #    print(colored("[-] Cannot use the same hostname for multiple urls", "red"))
+                                    #in order to make it global so we can use in other functions
 
+                            else:
+                                print(colored("[+] Port in use or you don't have permession to bind", "red"))
+                        else:
+                            print(colored("[-] URL name already used, please change it", "red"))
+                    else:
+                        print(colored("[-] Listener name already used, please change it", "red"))
+                else:
+                    print(colored("[-] You cannot use multiple listeners with one hostname!", "red"))
             except IndexError:
                 print(colored("[-] Please check listener arguments !", "red"))
                 print(colored("Syntax  : listen_http BindIP BindPort hostname interval URL listener_name", "green"))
@@ -292,30 +300,33 @@ while True:
                     continue
                 path = command.split(" ")[5]
                 listener_name = command.split(" ")[6]
-                if check_listener_name(listener_name):
-                    key_path = command.split(" ")[7]
-                    cert_path = command.split(" ")[8]
-                    if not os.path.isfile(cert_path) or not os.path.isfile(key_path):
-                        print(colored("[-] Please check the certficate and key path", "red"))
-                    elif listener_name in list(listeners_information.keys()):
-                        print(colored("[-] Listener name already used, please change it", "red"))
+                if check_create_path(host):
+                    if check_listener_name(listener_name):
+                        key_path = command.split(" ")[7]
+                        cert_path = command.split(" ")[8]
+                        if not os.path.isfile(cert_path) or not os.path.isfile(key_path):
+                            print(colored("[-] Please check the certficate and key path", "red"))
+                        else:
+                            listener = NewListener(
+                                listener_name,
+                                ip,
+                                port,
+                                host,
+                                interval,
+                                path,
+                                cert_path,
+                                key_path
+                            )
+                            if check_listener_port(ip, port):
+                                listener.start_listener()
+                                listener.create_path()
+                                print(colored("[+]%s Listener has been created" % listener_name, "green"))
+                            else:
+                                print(colored("[+] Port in use or you don't have permession to bind", "red"))
                     else:
-                        listener = NewListener(
-                            listener_name,
-                            ip,
-                            port,
-                            host,
-                            interval,
-                            path,
-                            cert_path,
-                            key_path
-                        )
-                        listener.start_listener()
-                        listener.create_path()
-                        print(colored("[+]%s Listener has been created" % listener_name, "green"))
+                        print(colored("[-] Listener name already used, please change it", "red"))
                 else:
-                    print(colored("[-] URL name already used, please change it", "red"))
-
+                    print(colored("[-] You cannot use multiple listeners with one hostname!", "red"))
             except IndexError:
                 print(colored("[-] Please check listener arguments !", "red"))
                 print(colored("Syntax  : listen_https BindIP BindPort hostname interval URL listener_name certficate_path key_path", "green"))
