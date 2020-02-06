@@ -212,6 +212,15 @@ while True:
                                 pass
                             except IndexError:
                                 print(colored("[+] Please select a module !"))
+
+                        elif scommand.split(" ")[0] == "deploy_cobalt_beacon":
+                            try:
+                                beacon_path = scommand.split(" ")[1]
+                                deploy_cobalt_beacon(session[2], beacon_path)
+                                pass
+                            except IndexError:
+                                print(colored("[+] Please select a valid beacon path!", "red"))
+
                         elif scommand == "disable_amsi":
                             disable_amsi(session[2])
                             pass
