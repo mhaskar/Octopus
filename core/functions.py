@@ -13,6 +13,8 @@ from profile import *
 import time
 import os
 import socket
+from socket import SO_REUSEADDR, SOL_SOCKET
+
 
 requests = []
 counter = 1
@@ -59,6 +61,10 @@ def check_create_path(hostname):
 
 def check_listener_port(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # dont check standard timeout
+    sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+
     try:
         sock.bind((host, port))
         sock.close()
@@ -69,7 +75,7 @@ def check_listener_port(host, port):
 def list_sessions():
 	    data = []
 	    for key in connections_information:
-	        data.append(connections_information[key])
+               data.append(connections_information[key])
 	    print(("\n\n" + tabulate(data, ["Session", "IP", "Hostname", "PID", "Username", "Domain", "Last ping", "OS"], "simple") + "\n\n"))
 
 def get_history():
