@@ -12,6 +12,7 @@ from .encryption import *
 from profile import *
 import time
 import os
+import socket
 
 requests = []
 counter = 1
@@ -45,6 +46,25 @@ def check_listener_name(listener_name):
 			    return True
 	else:
 		return True
+
+def check_create_path(hostname):
+	if len(listeners_information) > 0:
+	    for listener in listeners_information:
+		    if hostname == listeners_information[listener][3]:
+			    return False
+		    else:
+			    return True
+	else:
+		return True
+
+def check_listener_port(host, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.bind((host, port))
+        sock.close()
+        return True
+    except:
+        return False
 
 def list_sessions():
 	    data = []
@@ -128,7 +148,7 @@ def deploy_cobalt_beacon(session, beacon_path):
         print(colored("[+] Disabling AMSI before running the Beacon", "green"))
         disable_amsi(session)
         # wait until the disable amsi loaded correctly
-        # need some tests, not stable yet
+        # need some tests, not stable
         time.sleep(2)
         load_beacon(session, beacon_path)
         print(colored("[+]Cobalt Strike Beacon should be loaded into memory!", "green"))
