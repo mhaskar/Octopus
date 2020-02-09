@@ -298,8 +298,7 @@ while True:
                     continue
                 path = command.split(" ")[5]
                 listener_name = command.split(" ")[6]
-                if check_create_path(host):
-                    if check_listener_name(listener_name):
+                if check_listener_name(listener_name):
                         key_path = command.split(" ")[7]
                         cert_path = command.split(" ")[8]
                         if not os.path.isfile(cert_path) or not os.path.isfile(key_path):
@@ -321,10 +320,8 @@ while True:
                                 print(colored("[+]%s Listener has been created" % listener_name, "green"))
                             else:
                                 print(colored("[+] Port in use or you don't have permession to bind", "red"))
-                    else:
-                        print(colored("[-] Listener name already used, please change it", "red"))
                 else:
-                    print(colored("[-] You cannot use multiple listeners with one hostname!", "red"))
+                        print(colored("[-] Listener name already used, please change it", "red"))
             except IndexError:
                 print(colored("[-] Please check listener arguments !", "red"))
                 print(colored("Syntax  : listen_https BindIP BindPort hostname interval URL listener_name certficate_path key_path", "green"))
