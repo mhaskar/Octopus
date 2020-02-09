@@ -49,16 +49,6 @@ def check_listener_name(listener_name):
 	else:
 		return True
 
-def check_create_path(hostname):
-	if len(listeners_information) > 0:
-	    for listener in listeners_information:
-		    if hostname == listeners_information[listener][3]:
-			    return False
-		    else:
-			    return True
-	else:
-		return True
-
 def check_listener_port(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
