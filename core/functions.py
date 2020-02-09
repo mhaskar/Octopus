@@ -25,7 +25,7 @@ commands = {}
 key = "".join([random.choice(string.ascii_uppercase) for i in range(32)])
 aes_encryption_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_digispark"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_digispark", "delete_listener"]
 
 oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules", "deploy_cobalt_beacon"]
 
@@ -233,6 +233,7 @@ def main_help_banner():
     print("* listen_https  \t\tto start a HTTPS listener")
     print("interact {session}  \t\tto interact with a session")
     print("delete {session}  \t\tto delete a session")
+    print("delete_listener {listener_name} to delete a listener")
     print("exit \t\t\t\texit current session")
     print("\n")
 
