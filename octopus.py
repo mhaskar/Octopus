@@ -102,6 +102,15 @@ while True:
                 print(colored("[-] Wrong listener selected !", "red"))
                 continue
 
+        if command.split(" ")[0] == "delete_listener":
+            try:
+                listener = command.split(" ")[1]
+                delete_listener(listener)
+            except KeyError:
+                print(colored("[-] Wrong listener selected !", "red"))
+                continue
+
+
         if command.split(" ")[0] == "generate_hta":
             try:
                 listener = command.split(" ")[1]
