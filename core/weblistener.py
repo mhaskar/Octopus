@@ -10,6 +10,7 @@ import signal
 import string
 import random
 from termcolor import colored
+import requests as web_requests
 from .functions import *
 from .encryption import *
 from .esa import *
@@ -194,14 +195,20 @@ kill_listener_url = "".join([random.choice(string.ascii_uppercase + string.ascii
 kill_listener_token = "".join([random.choice(string.ascii_uppercase + string.ascii_lowercase) for i in range(50)])
 
 def delete_listener(listener_name):
-    listener_info = listeners_information.get(listener_name)
-    host = "0.0.0.0" #listener_info[1]
-    port = listener_info[2]
+    try:
+        listener_info = listeners_information.get(listener_name)
+        host = listener_info[1]
+        port = listener_info[2]
+    except:
+        print(colored("[-] Worng listener name!", "red"))
+        return False
+
     data = {"shutdown_token": kill_listener_token}
     request = web_requests.post("http://%s:%s/%s" % (host, port, kill_listener_url), data=data)
     if request.text == "d":
         del listeners_information[listener_name]
         print(colored("[+] Listener %s has been deleted" % (listener_name), "green"))
+
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
