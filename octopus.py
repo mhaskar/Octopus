@@ -59,7 +59,7 @@ while True:
             try:
                 session = connections_information[int(command.split(" ")[1])]
                 delete(session[2], int(command.split(" ")[1]))
-            except (KeyError, ValueError):
+            except:
                 print(colored("[-] Wrong listener selected !", "red"))
                 continue
 
@@ -101,6 +101,15 @@ while True:
             except KeyError:
                 print(colored("[-] Wrong listener selected !", "red"))
                 continue
+
+        if command.split(" ")[0] == "delete_listener":
+            try:
+                listener = command.split(" ")[1]
+                delete_listener(listener)
+            except KeyError:
+                print(colored("[-] Wrong listener selected !", "red"))
+                continue
+
 
         if command.split(" ")[0] == "generate_hta":
             try:
@@ -246,8 +255,7 @@ while True:
                     continue
                 path = command.split(" ")[5]
                 listener_name = command.split(" ")[6]
-                if check_create_path(host):
-                    if check_listener_name(listener_name):
+                if check_listener_name(listener_name):
                         if check_url(path):
                             listener = NewListener(
                                 listener_name,
@@ -270,10 +278,9 @@ while True:
                                 print(colored("[+] Port in use or you don't have permession to bind", "red"))
                         else:
                             print(colored("[-] URL name already used, please change it", "red"))
-                    else:
-                        print(colored("[-] Listener name already used, please change it", "red"))
                 else:
-                    print(colored("[-] You cannot use multiple listeners with one hostname!", "red"))
+                    print(colored("[-] Listener name already used, please change it", "red"))
+
             except IndexError:
                 print(colored("[-] Please check listener arguments !", "red"))
                 print(colored("Syntax  : listen_http BindIP BindPort hostname interval URL listener_name", "green"))
@@ -300,8 +307,7 @@ while True:
                     continue
                 path = command.split(" ")[5]
                 listener_name = command.split(" ")[6]
-                if check_create_path(host):
-                    if check_listener_name(listener_name):
+                if check_listener_name(listener_name):
                         key_path = command.split(" ")[7]
                         cert_path = command.split(" ")[8]
                         if not os.path.isfile(cert_path) or not os.path.isfile(key_path):
@@ -323,10 +329,8 @@ while True:
                                 print(colored("[+]%s Listener has been created" % listener_name, "green"))
                             else:
                                 print(colored("[+] Port in use or you don't have permession to bind", "red"))
-                    else:
-                        print(colored("[-] Listener name already used, please change it", "red"))
                 else:
-                    print(colored("[-] You cannot use multiple listeners with one hostname!", "red"))
+                        print(colored("[-] Listener name already used, please change it", "red"))
             except IndexError:
                 print(colored("[-] Please check listener arguments !", "red"))
                 print(colored("Syntax  : listen_https BindIP BindPort hostname interval URL listener_name certficate_path key_path", "green"))
