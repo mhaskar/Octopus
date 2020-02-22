@@ -15,7 +15,7 @@ AV_list = {
     "ESET": ["epfw", "epfwlwf", "epfwwfp"],
     "FireEye Endpoint Agent": ["xagt"],
     "F-Secure": ["fsdevcon", "FSORSPClient"],
-    "MacAfee": ["enterceptagent", "McAfeeEngineService", "McAfeeFramework"],
+    "MacAfee": ["enterceptagent", "McAfeeEngineService", "McAfeeFramework", "McCSPServiceHost", "MfeAVSvc"],
     "SentinelOne": ["SentinelAgent", "SentinelOne"],
     "Sophos": ["sophosssp", "sophossps"],
     "TrendMicro": ["tmntsrv"],

