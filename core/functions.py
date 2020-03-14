@@ -115,9 +115,6 @@ def list_modules():
 	else:
 		print((colored("[-] modules directory not Available")))
 
-def persistence():
-    # to do
-    pass
 
 def load_module(session, module_name):
 	module = "modules/" + module_name
@@ -139,6 +136,7 @@ def load_beacon(session, beacon_path):
 	commands[session] = base64_command
 
 def deploy_cobalt_beacon(session, beacon_path):
+    # to be updated with threading issue to avoid execution stop
     if os.path.isfile(beacon_path):
         print(colored("[+] Deploying Cobalt Strike Beacon into Octopus agent", "green"))
         print(colored("[+] Disabling AMSI before running the Beacon", "green"))
