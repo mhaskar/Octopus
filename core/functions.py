@@ -115,6 +115,16 @@ def list_modules():
 	else:
 		print((colored("[-] modules directory not Available")))
 
+def log_command(hostname, command, results):
+    log_name = hostname + ".log"
+    f = open("logs/%s" % log_name, "a")
+    data = "Hostname : %s\n" % hostname
+    data+= "Command : %s\n" % command
+    data+= "Time : %s\n" % time.ctime()
+    data+= "Results : %s\n" % results
+    data+= str("+" * 30) + "\n"
+    f.write(data)
+    f.close()
 
 def load_module(session, module_name):
 	module = "modules/" + module_name
@@ -273,7 +283,6 @@ def interact_help():
 	print("disable_amsi \t\t\tdisable AMSI on the target machine")
 	print("report \t\t\t\tget situation report from the target")
 	print("\n")
-
 
 def banner():
 	# \033[94m
