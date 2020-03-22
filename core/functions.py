@@ -116,6 +116,10 @@ def list_modules():
 		print((colored("[-] modules directory not Available")))
 
 def log_command(hostname, command, results):
+    if os.path.exists("logs/"):
+        pass
+    else:
+        os.mkdir("logs/")
     log_name = hostname + ".log"
     f = open("logs/%s" % log_name, "a")
     data = "Hostname : %s\n" % hostname
