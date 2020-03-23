@@ -38,4 +38,8 @@ first_ping_url = "/login"
 server_response_header = "nginx"
 
 # will return white page that includes HTA script
-mshta_url="/hta"
+mshta_url = "/hta"
+
+# auto kill value after n tries
+
+auto_kill = 10
