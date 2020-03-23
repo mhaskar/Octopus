@@ -30,6 +30,8 @@ AV_list = {
 SIEM = {
 
     "winlogbeat":"winlogbeat"
+    "splunk":"splunkd"
+    "splunk":"splunk"
 }
 
 
@@ -51,7 +53,7 @@ def esa(processes, session):
 
     # check for sysmon
     for process in processes:
-        if process == "Sysmon64":
+        if process == "Sysmon64" or process="Sysmon":
             sysmon = True
 
     hostname = session[2]
