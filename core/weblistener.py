@@ -90,7 +90,8 @@ class NewListener:
         pcode7 = pcode6.replace("OCTRECV", command_receiver_url.split("/")[1])
         pcode8 = pcode7.replace("OCU_PROTO", proto)
         pcode9 = pcode8.replace("SRVHOST", srvhost)
-        response = make_response(pcode9)
+        pcode10 = pcode9.replace("OCT_AKILL", str(auto_kill))
+        response = make_response(pcode10)
         response.headers["Server"] = server_response_header
         return response
 
