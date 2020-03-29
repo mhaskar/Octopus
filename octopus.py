@@ -327,6 +327,7 @@ while True:
                             if check_listener_port(ip, port):
                                 listener.start_listener()
                                 listener.create_path()
+                                listeners=listener
                                 print(colored("[+]%s Listener has been created" % listener_name, "green"))
                             else:
                                 print(colored("[+] Port in use or you don't have permession to bind", "red"))

