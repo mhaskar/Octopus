@@ -162,6 +162,7 @@ while True:
             except KeyError:
                 print(colored("[-] Wrong listener selected !", "red"))
                 continue
+
 # generate_digispark
         if command.split(" ")[0] == "generate_digispark":
             try:

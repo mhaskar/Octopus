@@ -15,21 +15,22 @@ block_size = AES.block_size
 pad = lambda s: s + (block_size - len(s) % block_size) * chr(block_size - len(s) % block_size)
 
 
-def encrypt_command(key, plain):
-    iv = Random.new().read(AES.block_size)
-    decoded_key = base64.b64decode(key)
-    aesobj = AES.new(decoded_key, AES.MODE_CBC, iv)
+def encrypt_command(keyb64, ivb64, plain):
+    decoded_key = base64.b64decode(keyb64)
+    decoded_iv = base64.b64decode(ivb64)
+    aesobj = AES.new(decoded_key, AES.MODE_CBC, decoded_iv)
     data = pad(plain)
     try:
         encd = aesobj.encrypt(data)
-        return base64.b64encode(iv + encd)
+        return base64.b64encode(encd)
     except:
         return ""
 
-def decrypt_command(key, encrypted_text):
-    decoded_key = base64.b64decode(key)
-    data = base64.b64decode(encrypted_text)
-    iv = data[:block_size]
-    aesobj = AES.new(decoded_key, AES.MODE_CBC, iv)
-    decd = aesobj.decrypt(data)[block_size:].decode("UTF-8")
-    return decd
+
+def decrypt_command(keyb64, ivb64, cipher):
+    decoded_key = base64.b64decode(keyb64)
+    decoded_iv = base64.b64decode(ivb64)
+    data = base64.b64decode(cipher)
+    aesobj = AES.new(decoded_key, AES.MODE_CBC, decoded_iv)
+    decd = aesobj.decrypt(data)[0:].decode("UTF-8")
+    return decd.strip('\x00')

