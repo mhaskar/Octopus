@@ -479,32 +479,14 @@ PowerView.ps1
 [+] Module should be loaded !
 (HR-PC-TYRMJ) >>
 ```
-# Todo
-* [ ] Create collaborative team server
-* [ ] Add extra information to gather for ESA module
-* [ ] Add generation of HTA payloads
-* [x] Add generation of compiled binaries
-* [x] Add customized profiles for listeners
+# Credits
 
-# Screenshots
+* [Ian Lyte](https://twitter.com/Bb_hacks) for reporting multiple bugs in Octopus and pushing an enhanced AMSI bypass module.
 
-![Octopus main screen](screenshots/1.png)
-* * * *
-![Octopus Help](screenshots/2.png)
-* * * *
-![Octopus Listeners](screenshots/3.png)
-* * * *
-![Octopus over ssl](screenshots/4.png)
-* * * *
-![Octopus load module](screenshots/5.png)
-* * * *
-![Octopus ESA](screenshots/6.png)
-* * * *
-![Octopus ESA2](screenshots/7.png)
-* * * *
-![Octopus agents](screenshots/8.png)
-* * * *
-![Octopus generate powershell](screenshots/9.png)
+* [Moath Maharmah](https://twitter.com/iomoaaz) for enhancing the encryption module and writing a standalone C# Octopus agent which will be added to the upcoming release.
+
+* [J005](https://github.com/iomoath) for adding enhanced Powershell oneliner and fix an issue in the HID attack script.
+
 
 # License
 
