@@ -479,13 +479,31 @@ PowerView.ps1
 [+] Module should be loaded !
 (HR-PC-TYRMJ) >>
 ```
+
+# More about Octopus
+
+* [Octopus v1.0 stable: Cobalt Strike deployment & much more!](https://shells.systems/octopus-v1-0-stable-cobalt-strike-deployment-much-more)
+
+* [Unveiling Octopus: The pre-operation C2 for Red Teamers](https://shells.systems/unveiling-octopus-the-pre-operation-c2-for-red-teamers/)
+
+
+
+
+
 # Credits
 
 * [Ian Lyte](https://twitter.com/Bb_hacks) for reporting multiple bugs in Octopus and pushing an enhanced AMSI bypass module.
 
+* [Khlief](https://github.com/ahmedkhlief) for adding HTA module and fix a bug in download feature
+
 * [Moath Maharmah](https://twitter.com/iomoaaz) for enhancing the encryption module and writing a standalone C# Octopus agent which will be added to the upcoming release.
 
+* [Khlief](https://github.com/ahmedkhlief) for adding HTA module and fix a bug in download
+
+* [TeslaPulse](https://github.com/TeslaPulse/) for testing Octopus
+
 * [J005](https://github.com/iomoath) for adding enhanced Powershell oneliner and fix an issue in the HID attack script.
+
 
 
 # License
