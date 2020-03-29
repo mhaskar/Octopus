@@ -63,12 +63,6 @@ while True:
                 print(colored("[-] Wrong listener selected !", "red"))
                 continue
 
-        # delete_listener
-
-        # TBD
-        # if command.split(" ")[0] == "delete_listener":
-        #    listener = listeners_information[int(command.split(" ")[1])]
-        #    delete(listener[0], int(command.split(" ")[1]))
 
         if command == "clear":
             os.system("clear")
@@ -104,9 +98,15 @@ while True:
 
         if command.split(" ")[0] == "delete_listener":
             try:
-                listener = command.split(" ")[1]
-                delete_listener(listener)
-            except KeyError:
+                try:
+                    listener = command.split(" ")[1]
+                    delete_listener(listener)
+                except IndexError:
+                    print(colored("[-] Please select a listener !", "red"))
+                    print(colored("Syntax :  delete_listener listener_name", "green"))
+                    print(colored("Example : delete_listener listener1", "yellow"))
+
+            except:
                 print(colored("[-] Wrong listener selected !", "red"))
                 continue
 
