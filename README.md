@@ -498,8 +498,6 @@ PowerView.ps1
 
 * [Moath Maharmah](https://twitter.com/iomoaaz) for enhancing the encryption module and writing a standalone C# Octopus agent which will be added to the upcoming release.
 
-* [Khlief](https://github.com/ahmedkhlief) for adding HTA module and fix a bug in download
-
 * [TeslaPulse](https://github.com/TeslaPulse/) for testing Octopus
 
 * [J005](https://github.com/iomoath) for adding enhanced Powershell oneliner and fix an issue in the HID attack script.
