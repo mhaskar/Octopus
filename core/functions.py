@@ -318,7 +318,7 @@ def banner():
     CRED = '\033[91m'
     ENDC = '\033[0m'
 
-banner =  r'''
+    banner =  r'''
 
 {0}
 .88888.   a88888b. d888888P  .88888.   888888ba  dP     dP .d88888b
