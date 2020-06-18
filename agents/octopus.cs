@@ -12,6 +12,7 @@ namespace TT3
     static void Main()
       {
 
+    //used HttpWebRequest insted of DownloadString
     var request = (HttpWebRequest)WebRequest.Create("OCT_URL");
     var response = (HttpWebResponse)request.GetResponse();
     var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
