@@ -218,6 +218,61 @@ while True:
                 print(colored("[-] Wrong listener selected !", "red"))
                 continue
 
+# shellcode
+
+        if command.split(" ")[0] == "generate_x86_shellcode":
+            try:
+                listener = command.split(" ")[1]
+            except IndexError:
+                print(colored("[-] Please select a listener and check your options !", "red"))
+                print(colored("Syntax :  generate_x86_shellcode listener_name", "green"))
+                print(colored("Example : generate_x86_shellcode listener1", "yellow"))
+                continue
+
+            try:
+                hostname = listeners_information[listener][3]+":"+str(listeners_information[listener][2])
+                path = listeners_information[listener][5]
+                proto = listeners_information[listener][6]
+
+                # check if protocol is True then https is used
+                if proto:
+                    proto_to_use = "https"
+                else:
+                    proto_to_use = "http"
+
+                generate_x86_shellcode(hostname, path, proto_to_use)
+            except KeyError:
+                print(colored("[-] Wrong listener selected !", "red"))
+                continue
+
+
+# shellcode x64
+
+        if command.split(" ")[0] == "generate_x64_shellcode":
+            try:
+                listener = command.split(" ")[1]
+            except IndexError:
+                print(colored("[-] Please select a listener and check your options !", "red"))
+                print(colored("Syntax :  generate_x64_shellcode listener_name", "green"))
+                print(colored("Example : generate_x64_shellcode listener1", "yellow"))
+                continue
+
+            try:
+                hostname = listeners_information[listener][3]+":"+str(listeners_information[listener][2])
+                path = listeners_information[listener][5]
+                proto = listeners_information[listener][6]
+
+                # check if protocol is True then https is used
+                if proto:
+                    proto_to_use = "https"
+                else:
+                    proto_to_use = "http"
+
+                generate_x64_shellcode(hostname, path, proto_to_use)
+            except KeyError:
+                print(colored("[-] Wrong listener selected !", "red"))
+                continue
+
 
 
 # generate_digispark

