@@ -34,6 +34,16 @@ You can install all of Octopus' requirements via :
 
 ```pip install -r requirements.txt```
 
+You need to install `nasm` for linux and 'mingw-w64' compiler to use the shellcoding feature and the spoofed args agent.
+
+You can install nasm on Debian based distros using:
+
+`apt install nasm`
+
+And you can install `mingw-w64` on Debian based distros using:
+
+`apt install mingw-w64`
+
 Octopus has been tested on the following operating systems:
 
 * Ubuntu (18.04)
