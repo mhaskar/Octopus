@@ -16,6 +16,8 @@ from .encryption import *
 from .esa import *
 from flask import *
 import logging
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 parentfolder = os.path.abspath("..")
 if parentfolder not in sys.path:
     sys.path.insert(0, parentfolder)
@@ -199,12 +201,16 @@ def delete_listener(listener_name):
         listener_info = listeners_information.get(listener_name)
         host = listener_info[1]
         port = listener_info[2]
+        is_ssl = listener_info[6]
     except:
         print(colored("[-] Worng listener name!", "red"))
         return False
 
     data = {"shutdown_token": kill_listener_token}
-    request = web_requests.post("http://%s:%s/%s" % (host, port, kill_listener_url), data=data)
+    if is_ssl == True:
+        request = web_requests.post("https://%s:%s/%s" % (host, port, kill_listener_url), data=data, verify=False)
+    else:
+        request = web_requests.post("http://%s:%s/%s" % (host, port, kill_listener_url), data=data)
     if request.text == "d":
         del listeners_information[listener_name]
         print(colored("[+] Listener %s has been deleted" % (listener_name), "green"))
