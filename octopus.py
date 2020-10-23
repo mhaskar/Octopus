@@ -60,7 +60,7 @@ while True:
                 session = connections_information[int(command.split(" ")[1])]
                 delete(session[2], int(command.split(" ")[1]))
             except:
-                print(colored("[-] Wrong listener selected !", "red"))
+                print(colored("[-] Wrong session selected !", "red"))
                 continue
 
 
