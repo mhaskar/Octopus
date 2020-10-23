@@ -9,6 +9,8 @@ avs = []
 AV_list = {
     "Kaspersky":    ["avp", "avpui", "klif", "KAVFS", "kavfsslp"],
     "Symantec":    ["SmcGui", "SISIPSService"],
+    "CrowdStrike EDR": ["CSFalconService"],
+    "Carbon Black EDR": ["cb"],
     "Avast":    ["aswBcc", "bcc"],
     "Bitdefender": ["epag", "EPIntegrationService", "EPProtectedService", "EPSecurityService"],
     "Cylance": ["CylanceSvc", "CylanceUi"],
