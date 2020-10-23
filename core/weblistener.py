@@ -237,6 +237,10 @@ def fr():
     fdata = request.form["token"].replace(" ", "+")
     username = request.headers["x-Authorization"]
     fusername = decrypt_command(aes_key, aes_iv, username)
+    if os.path.isdir("downloads"):
+        pass
+    else:
+        os.mkdir("downloads")    
     if os.path.isdir("downloads/%s" % fusername):
         pass
     else:
