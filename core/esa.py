@@ -19,7 +19,7 @@ AV_list = {
     "F-Secure": ["fsdevcon", "FSORSPClient"],
     "MacAfee": ["enterceptagent", "McAfeeEngineService", "McAfeeFramework", "McCSPServiceHost", "MfeAVSvc"],
     "SentinelOne": ["SentinelAgent", "SentinelOne"],
-    "Sophos": ["sophosssp", "sophossps"],
+    "Sophos": ["sophosssp", "sophossps", "Sophos"],
     "TrendMicro": ["tmntsrv"],
     "Windows Defender": ["MsMpEng"],
     "ZoneALarm": ["zlclient"],
